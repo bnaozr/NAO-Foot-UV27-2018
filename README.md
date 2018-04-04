@@ -14,8 +14,8 @@ Les fichiers (archives binaires) utiles au projet mais non gérés par git sont 
 
 Ces archives peuvent être récupérées sur /public/share/uv27spid 
 
-Pour les insèrer ces archives à votre projet, placez vous dans le répertoire principal et decompressez-les avec les commandes suivantes
+Pour les insèrer ces archives à votre projet, placez vous dans le répertoire principal et decompressez-les avec les commandes suivantes :
 
-tar xfz /public/share/uv27spid/pynaoqi-20170505.tgz
-tar xfz /public/share/uv27spid/naoqi-20170505.tgz
-tar xfz /public/share/uv27spid/v-rep-20170505.tgz
+- tar xfz /public/share/uv27spid/pynaoqi-20170505.tgz
+- tar xfz /public/share/uv27spid/naoqi-20170505.tgz
+- tar xfz /public/share/uv27spid/v-rep-20170505.tgz
