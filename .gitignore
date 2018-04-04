@@ -1,0 +1,10 @@
+*.pyc
+*.py~
+*~
+V-REP_PRO_EDU_V3_3_2_64_Linux
+naoqi
+pynaoqi-python-2.7-naoqi-1.14-linux64
+external_binaries
+v-rep-20170505.tgz
+naoqi-20170505.tgz
+pynaoqi-20170505.tgz
