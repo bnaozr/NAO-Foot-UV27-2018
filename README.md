@@ -20,6 +20,4 @@ Pour insèrer ces archives à votre projet, placez vous dans le répertoire prin
 - tar xfz /public/share/uv27spid/naoqi-20180402.tgz 
 - tar xfz /public/share/uv27spid/v-rep-20180402.tgz
 
-double change check : try double change on git and github ....
-
-oho or aha : we must decide
+Les équipes sont à définir dans le fichier "teams_n_games.txt"
