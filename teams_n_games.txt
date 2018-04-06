@@ -51,4 +51,3 @@ Poule B : PB1=  , PB2= , PB3=
 
 Finale :
 PA1 - PB1
-
