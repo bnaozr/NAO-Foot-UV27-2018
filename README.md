@@ -14,7 +14,8 @@ Les fichiers (archives binaires) utiles au projet mais non gérés par git sont 
 
 Ces archives sont à récupérer sur /public/share/uv27spid et à decompresser dans votre projet.
 Lorsque vous êtes dans le répertoire principal du projet (en principe NAO-Foot-UV27-2018), vous pouvez ajouter ces fichiers 
-avec la commande : . ./copy_usefull_files.bash
+avec la commande : 
+- . ./copy_usefull_files.bash
 
 Vous pouvez aussi le faire avec les commandes suivantes :
 - tar xfz /public/share/uv27spid/pynaoqi-20180402.tgz
