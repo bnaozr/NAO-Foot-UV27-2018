@@ -2,7 +2,7 @@
 localdir=${PWD##*/}
 if [ ${localdir=} = "NAO-Foot-UV27-2018" ]; then
   echo "ok"
-  RemotePath=/home/newubu/MyApps/Nao/v-rep/nao-new-model/build
+  RemotePath=/home/newubu/MyApps/Nao/v-rep/nao-new-model/build/
   #RemotePath=/public/share/uv27spid/
   ReleaseDate="20180402"
   ExternalLibNaoqiGz=naoqi-${ReleaseDate}.tgz
