@@ -3,7 +3,7 @@ Définition des équipes pour le challenge NAO Foot 2018
 exemple 
 Equipe 0 :
 Pseudo : team_allstars
-Membres : Michel P., Zinedine Z., Raymond K., Diego M., Fabien B., Johan C., Christiano R.
+Membres : Michel P., Zinedine Z., Raymond K., Diego M., Fabien B., Johan C., Paul P.
 
 ------------------------------------------------------
 Composition des six équipes :
