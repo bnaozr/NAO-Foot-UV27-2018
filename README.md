@@ -12,10 +12,11 @@ Les fichiers (archives binaires) utiles au projet mais non gérés par git sont 
 - naoqi-20180402.tgz      "intelligence" du robot NAO
 - v-rep-20180402.tgz      simulateur dynamique V-REP
 
-Ces archives sont à récupérer sur /public/share/uv27spid et à decompresser dans votre projet
+Ces archives sont à récupérer sur /public/share/uv27spid et à decompresser dans votre projet.
+Lorsque vous êtes dans le répertoire principal du projet (en principe NAO-Foot-UV27-2018), vous pouvez ajouter ces fichiers 
+avec la commande : . ./copy_usefull_files.bash
 
-Pour insèrer ces archives à votre projet, placez vous dans le répertoire principal du projet (en principe NAO-Foot-UV27-2018) et decompressez-les avec les commandes suivantes :
-
+Vous pouvez aussi le faire avec les commandes suivantes :
 - tar xfz /public/share/uv27spid/pynaoqi-20180402.tgz
 - tar xfz /public/share/uv27spid/naoqi-20180402.tgz 
 - tar xfz /public/share/uv27spid/v-rep-20180402.tgz
