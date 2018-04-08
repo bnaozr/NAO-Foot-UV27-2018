@@ -5,8 +5,6 @@ Equipe 0 :
 Pseudo : team_allstars
 Membres : Michel P., Zinedine Z., Raymond K., Diego M., Fabien B., Johan C.
 
-some stuff already here
-
 ------------------------------------------------------
 Composition des six équipes :
 
