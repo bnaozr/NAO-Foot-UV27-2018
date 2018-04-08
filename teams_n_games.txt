@@ -5,8 +5,6 @@ Equipe 0 :
 Pseudo : team_allstars
 Membres : Michel P., Zinedine Z., Raymond K., Diego M., Fabien B., Johan C.
 
-My team is ...
-
 ------------------------------------------------------
 Composition des six équipes :
 
@@ -53,3 +51,4 @@ Poule B : PB1=  , PB2= , PB3=
 
 Finale :
 PA1 - PB1
+
