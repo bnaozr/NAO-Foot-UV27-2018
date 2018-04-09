@@ -5,18 +5,16 @@ Equipe 0 :
 Pseudo : team_allstars
 Membres : Michel P., Zinedine Z., Raymond K., Diego M., Fabien B., Johan C.
 
-kkkk
-
 ------------------------------------------------------
 Composition des six équipes :
 
 Equipe 1 :
-Pseudo :  team_
-Membres : 
+Pseudo :  team_Maoteam
+Membres : Alexis B., Anouar M., Arnaud K., Aurélien L., Clément F., Coraline D., Cyril C., David B., Nicolas C., Pierre M.
 
-Equipe 2 :
-Pseudo :  team_
-Membres : 
+Equipe 2 : IGN
+Pseudo :  team_ImGettingNothing
+Membres : Corentin J., Erwann L, Simon Q., Alexandre C., Matthieu B., Jonathan G., Félix L.B., Nathan F., Louis L., Philibert A.
 
 Equipe 3 :
 Pseudo :  team_
@@ -27,17 +25,12 @@ Pseudo :  team_
 Membres : 
 
 Equipe 5 :
-Pseudo :  team_
-Membres : 
+Pseudo :  team_NaoMe
+Membres : Riwan C., Caine S., Marine D., Pierre L., Jean-Baptiste M., Gwendal B., Ange V., Etienne M.
 
 Equipe 6 :
-
-Pseudo : Rocket 
-Membres : 
-Valentin Chazelas
-Nelson Wouogang
-Quentin Ducasse
-Florian Gaurier
+Pseudo : team_Rocket 
+Membres : Ducasse Q., Chazelas V. , Nelson W., Florian G.
 
 ------------------------------------------------------
 Challenge
