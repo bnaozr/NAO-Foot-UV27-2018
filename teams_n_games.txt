@@ -6,13 +6,14 @@ Pseudo : team_allstars
 Membres : Michel P., Zinedine Z., Raymond K., Diego M., Fabien B., Johan C.
 
 kkkk
-
+test
 ------------------------------------------------------
 Composition des six équipes :
 
 Equipe 1 :
-Pseudo :  team_
-Membres : 
+Pseudo :  Maoteam
+Membres : Alexis B., Anouar M., Arnaud K., Aurélien L., Clément F.,
+Coraline D., Cyril C., David B., Nicolas C., Pierre M.
 
 Equipe 2 :
 Pseudo :  team_
