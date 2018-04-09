@@ -31,8 +31,13 @@ Pseudo :  team_
 Membres : 
 
 Equipe 6 :
-Pseudo :  team_
-Membres : Valentin Chazelas
+
+Pseudo :  
+Membres : 
+Valentin Chazelas
+Nelson Wouogang
+Quentin DUCASSE
+
 
 ------------------------------------------------------
 Challenge
