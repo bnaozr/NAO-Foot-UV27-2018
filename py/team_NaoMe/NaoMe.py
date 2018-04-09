@@ -18,10 +18,6 @@ if (len(sys.argv) >= 2):
 if (len(sys.argv) >= 3):
     robotPort = int(sys.argv[2])
 
-print(robotIp)
-print(robotPort)
-
-
 try:
     motionProxy = ALProxy("ALMotion", robotIp, robotPort)
 except Exception:
