@@ -17,26 +17,37 @@ def main():
     args = parser.parse_args()
 
     nao = Nao(args.ip, args.port)
-    
+
     # FSM
-    states = ['idle', 'end', 'turning_left', 'turning_right', 'rest', 'walking', 'walking_back']
+    states = ['idle', 'end', 'turning_left', 'turning_right', 'rest',
+              'walking', 'walking_back']
 
     transitions = [
-            {'trigger': 'go', 'source': 'idle', 'dest': 'walking', 'before': 'walk'},
-            {'trigger': 'wait', 'source': 'walking', 'dest': 'idle', 'before': 'stop_move'},
-            {'trigger': 'turn_left', 'source': 'idle', 'dest': 'turning_left', 'before': 'rotate_left'},
-            {'trigger': 'wait', 'source': 'turning_left', 'dest': 'idle', 'before': 'stop_move'},
-            {'trigger': 'turn_right', 'source': 'idle', 'dest': 'turning_right', 'before': 'rotate_right'},
-            {'trigger': 'wait', 'source': 'turning_right', 'dest': 'idle', 'before': 'stop_move'},
-            {'trigger': 'back', 'source': 'idle', 'dest': 'walking_back', 'before': 'walk_back'},
-            {'trigger': 'wait', 'source': 'walking_back', 'dest': 'idle', 'before': 'stop_move'},
+            {'trigger': 'go', 'source': 'idle', 'dest': 'walking',
+                'before': 'walk'},
+            {'trigger': 'wait', 'source': 'walking', 'dest': 'idle',
+                'before': 'stop_move'},
+            {'trigger': 'turn_left', 'source': 'idle', 'dest': 'turning_left',
+                'before': 'rotate_left'},
+            {'trigger': 'wait', 'source': 'turning_left', 'dest': 'idle',
+                'before': 'stop_move'},
+            {'trigger': 'turn_right', 'source': 'idle',
+                'dest': 'turning_right', 'before': 'rotate_right'},
+            {'trigger': 'wait', 'source': 'turning_right', 'dest': 'idle',
+                'before': 'stop_move'},
+            {'trigger': 'back', 'source': 'idle', 'dest': 'walking_back',
+                'before': 'walk_back'},
+            {'trigger': 'wait', 'source': 'walking_back', 'dest': 'idle',
+                'before': 'stop_move'},
             {'trigger': 'stop', 'source': 'rest', 'dest': 'end'},
-            {'trigger': 'rest', 'source': 'idle', 'dest': 'rest', 'before': 'crouch'},
-            {'trigger': 'go', 'source': 'rest', 'dest': 'idle', 'before': 'wake_up'}
+            {'trigger': 'rest', 'source': 'idle', 'dest': 'rest',
+                'before': 'crouch'},
+            {'trigger': 'go', 'source': 'rest', 'dest': 'idle',
+                'before': 'wake_up'}
             ]
 
     machine = Machine(model=nao, states=states, transitions=transitions,
-            initial='idle', ignore_invalid_triggers=True)
+                      initial='idle', ignore_invalid_triggers=True)
 
     pg.init()
     window = pg.display.set_mode((640, 480))
@@ -71,8 +82,6 @@ def main():
         if nao.state == 'walking':
             nao.avoid_obstacle()
         time.sleep(0.1)
-
-
 
 
 if __name__ == '__main__':

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from naoqi import ALProxy
 
+
 class Nao:
     def __init__(self, ip, port):
         self.motion = ALProxy('ALMotion', ip, int(port))
@@ -12,8 +13,10 @@ class Nao:
         self.motion.wakeUp()
 
     def avoid_obstacle(self):
-        d_left = self.memory.getData("Device/SubDeviceList/US/Left/Sensor/Value")
-        d_right = self.memory.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+        d_left = self.memory.getData(
+                "Device/SubDeviceList/US/Left/Sensor/Value")
+        d_right = self.memory.getData(
+                "Device/SubDeviceList/US/Right/Sensor/Value")
 
         if d_left < 0.5:
             self.wait()
@@ -46,4 +49,3 @@ class Nao:
 
     def walk_back(self):
         self.motion.move(-0.1, 0, 0)
-
