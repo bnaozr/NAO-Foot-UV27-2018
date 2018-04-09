@@ -47,7 +47,3 @@ class Nao:
     def walk_back(self):
         self.motion.move(-0.1, 0, 0)
 
-    def nom(sdfkdfj)
-      # sdfsdf
-      pass
-
