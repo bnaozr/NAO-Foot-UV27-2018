@@ -27,7 +27,7 @@ Pseudo :  team_
 Membres : 
 
 Equipe 5 :
-Pseudo :  team_NaoMe
+Pseudo :  team_NaoMe_lama
 Membres : Riwan C., Caine S., Marine D., Pierre L., Jean-Baptiste M., Gwendal B., Ange V., Etienne M.
 
 Equipe 6 :
