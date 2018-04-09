@@ -47,7 +47,7 @@ def initialisation():
 
     return(motionProxy,postureProxy,sonarProxy, memoryProxy)
 
-def decal_droit(motion,posture,freq):
+def decal_droite(motion,posture,freq):
     motion.stopMove()
     x  = 0.0
     y  = 1.0
