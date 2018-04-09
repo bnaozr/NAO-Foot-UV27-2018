@@ -31,8 +31,9 @@ Pseudo :  team_
 Membres : 
 
 Equipe 6 :
-Pseudo :  team_
+Pseudo : 
 Membres : 
+Quentin DUCASSE
 
 ------------------------------------------------------
 Challenge
