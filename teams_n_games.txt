@@ -29,9 +29,9 @@ Pseudo :  team_NaoMe
 Membres : Riwan C., Caine S., Marine D., Pierre L., Jean-Baptiste M., Gwendal B., Ange V., Etienne M.
 
 Equipe 6 :
-Pseudo :  team_
-Membres : 
-git log
+Pseudo : team_Rocket 
+Membres : Ducasse Q., Chazelas V. , Nelson W., Florian G.
+
 ------------------------------------------------------
 Challenge
 
