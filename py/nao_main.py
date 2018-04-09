@@ -192,10 +192,10 @@ def evitement():
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
     if valR<valL:
-        while valR<=0.40:
+        while valR<=0.30:
             x  = 0.1
             y  = 0.0
-            theta  = math.pi/6.0 
+            theta  = math.pi/4.0 
             frequency=0.75
             motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
             sonarProxy.subscribe("SonarApp")
@@ -204,10 +204,10 @@ def evitement():
         motionProxy.stopMove()
         event="FinObstacle"
     else:  
-        while valL<=0.40:
+        while valL<=0.30:
             x  = 0.1
             y  = 0.0
-            theta  =-math.pi/6.0 
+            theta  =-math.pi/4.0 
             frequency=0.75
             motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
             sonarProxy.subscribe("SonarApp")
