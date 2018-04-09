@@ -52,6 +52,18 @@ try:
 except Exception, e:
     print "Could not create proxy to text2speech"
     print "Error was: ", e
+    
+try:
+    memoryProxy = ALProxy("ALMemory", robotIp, robotPort)
+except Exception, e:
+    print "Could not create proxy to ALMemory"
+    print "Error was: ", e
+
+try:
+    sonarProxy = ALProxy("ALSonar", robotIp, robotPort)
+except Exception, e:
+    print "Could not create proxy to ALSonar"
+    print "Error was: ", e
 
 motionProxy.setWalkArmsEnabled(True, True)
 motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
@@ -62,17 +74,29 @@ motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
 # example of a function doRun 
 def go():
     print ">>>>>> action : runs for his life"
-    x = 1.0                             # depuis   naocmd
-    y = 0.0                             # -
-    theta = 0.0                         # -
-    motionProxy.moveTo (x, y, theta)    # depuis naocmd
-    time.sleep(1.0)
-    event="PressG" # define the default event
-    key_pressed = pygame.key.get_pressed()
-    if key_pressed[pygame.K_w]:
-        event="PressW"
-    if key_pressed[pygame.K_s]:
-        event="PressS" 
+    sonarProxy.subscribe("SonarApp")
+    valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
+    valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+    sonarProxy.unsubscribe("SonarApp")
+    if (valL<=0.5 or valR<=0.5):
+        motionProxy.stopMove()
+        event="Obstacle"
+    else:
+        x  = 1.0
+        y  = 0.0
+        theta  = 0.0
+        frequency  = 1.0
+        motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+        event="PressG" # define the default event
+        key_pressed = pygame.key.get_pressed()
+
+    
+        if key_pressed[pygame.K_w]:
+            motionProxy.stopMove()
+            event="PressW"
+        if key_pressed[pygame.K_s]:
+            motionProxy.stopMove()
+            event="PressS" 
     return event # return event to be able to define the transition
 
 def wakeUp():
@@ -82,7 +106,6 @@ def wakeUp():
     postureProxy.goToPosture("StandInit", 0.5)                              # --
     motionProxy.setWalkArmsEnabled(True, True)                              # --
     motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]]) # depuis naocmd
-    time.sleep(1.0)
     event="PressW" # define the default event
     key_pressed = pygame.key.get_pressed()
     if key_pressed[pygame.K_g]:
@@ -96,9 +119,7 @@ def wakeUp():
     return event
 
 def stand():
-    print ">>>>>> action : stand still"   # do some work
-    motionProxy.rest() # depuis naocmd
-    time.sleep(1.0)
+    print ">>>>>> action : stand still"   # depuis naocmd
     event="PressW" # define the default event
     key_pressed = pygame.key.get_pressed()
     if key_pressed[pygame.K_g]:
@@ -113,40 +134,41 @@ def stand():
 
 def turnLeft():
     print ">>>>>> action : turn left"   # do some work
-    x = 0.2                             # depuis naocmd
-    y = 0.0                             # --
-    theta = math.pi/6.0                 # --
-    motionProxy.moveTo (x, y, theta)    # depuis naocmd
-    time.sleep(1.0)
+    x  = 0.1
+    y  = 0.0
+    theta  = math.pi/4.0 
+    frequency  = 1.0
+    motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressL" # define the default event
     key_pressed = pygame.key.get_pressed()
     if key_pressed[pygame.K_s]:
+        motionProxy.stopMove()
         event="PressS" 
     if key_pressed[pygame.K_w]:
+        motionProxy.stopMove()
         event="PressW" 
     return event
 
 def turnRight():
     print ">>>>>> action : turn right"   # do some work
-    x = 0.2                             # depuis naocmd
-    y = 0.0                             # -
-    theta = -math.pi/6.0                # -
-    motionProxy.moveTo (x, y, theta)    # depuis naocmd
-    time.sleep(1.0)
+    x  = 0.1
+    y  = 0.0
+    theta  = -math.pi/4.0 
+    frequency  = 1.0
+    motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressR" # define the default event
     key_pressed = pygame.key.get_pressed()
     if key_pressed[pygame.K_s]:
+        motionProxy.stopMove()
         event="PressS"
     if key_pressed[pygame.K_w]:
+        motionProxy.stopMove()
         event="PressW"
     return event
 
 def sleep():
     print ">>>>>> action : sleep"   # do some work
-    postureProxy.goToPosture("Crouch", fractSpeed) # depuis naocmd
-    motionProxy.setStiffnesses("Body", 0.0)        # -
     motionProxy.rest()                             # depuis naocmd
-    time.sleep(1.0)
     event="PressS" # define the default event
     key_pressed = pygame.key.get_pressed()
     if key_pressed[pygame.K_s]:
@@ -160,6 +182,27 @@ def sleep():
 def end():
     print ">>>>>> action : mission completed"   # do some work
 
+
+def evitement():
+    print ">>>>>> action : attention a la mousse"   # do some work
+    sonarProxy.subscribe("SonarApp")
+    valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
+    valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+    sonarProxy.unsubscribe("SonarApp")
+    if valR<valL:  
+        x  = 0.1
+        y  = 0.0
+        theta  = math.pi/4.0 
+        motionProxy.moveTo (x, y, theta)
+        event="FinObstacle"
+    else:  
+        x  = 0.1
+        y  = 0.0
+        theta  = -math.pi/4.0 
+        motionProxy.moveTo (x, y, theta)
+        event="FinObstacle"
+    return event
+
 # define here all the other functions (actions) of the fsm 
 # ...
 
@@ -172,7 +215,7 @@ if __name__== "__main__":
     f.add_state ("TournerDroite")
     f.add_state ("TournerGauche")
     f.add_state ("End")
-   
+    f.add_state ("Evitement")
 
     # defines the events 
     f.add_event("PressG") # example
@@ -181,6 +224,7 @@ if __name__== "__main__":
     f.add_event("PressW")
     f.add_event("PressS")
     f.add_event("PressE")
+    f.add_event("Obstacle")
    
    
     # defines the transition matrix
@@ -202,6 +246,8 @@ if __name__== "__main__":
     f.add_transition ("Avancer","Pret","PressW",stand)
     f.add_transition ("Avancer","Veille","PressS",sleep)
     f.add_transition ("Avancer","Avancer","PressG",go)
+    f.add_transition ("Avancer","Evitement","Obstacle",evitement)
+    f.add_transition ("Evitement","Avancer","FinObstacle",go)
     
 
     # initial state
