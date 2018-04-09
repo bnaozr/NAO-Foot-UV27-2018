@@ -1,32 +1,23 @@
 # -*- coding: utf-8 -*-
-import curses
-import logging
+import argparse
+import pygame as pg
 import time
 
+from pygame.locals import *
 from transitions import Machine
 
 from nao import Nao
 
 
-def main(stdscr):
-    curses.echo()
-    stdscr.addstr(0, 0, 'IP: ')
-    ip = stdscr.getstr(0, 5)
-    stdscr.addstr(1, 0, 'port: ')
-    port = stdscr.getstr(1, 6)
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--ip', help='addresse ip du nao')
+    parser.add_argument('--port', help='port du nao', type=int)
 
-    curses.noecho()
-    stdscr.clear()
-    stdscr.nodelay(True)
-    stdscr.scrollok(True)
+    args = parser.parse_args()
 
-    nao = Nao(ip, port)
-
-    # Logging
-    handler = logging.StreamHandler()
-    handler.setFormatter(logging.Formatter(fmt='%(message)s\r'))
-    logging.getLogger('transitions').addHandler(handler)
-
+    nao = Nao(args.ip, args.port)
+    
     # FSM
     states = ['idle', 'end', 'turning_left', 'turning_right', 'rest', 'walking', 'walking_back']
 
@@ -47,33 +38,33 @@ def main(stdscr):
     machine = Machine(model=nao, states=states, transitions=transitions,
             initial='idle', ignore_invalid_triggers=True)
 
+    pg.init()
+    window = pg.display.set_mode((640, 480))
+
     run = True
     while run:
-        try:
-            key = stdscr.getkey()
-        except:
-            key = None
+        for event in pg.event.get():
+            if event.type == KEYDOWN:
+                if event.key == K_b:
+                    nao.back()
 
-        if key == 'b':
-            nao.back()
+                elif event.key == K_c:
+                    nao.rest()
 
-        elif key == 'c':
-            nao.rest()
+                elif event.key == K_g:
+                    nao.go()
 
-        elif key == 'g':
-            nao.go()
+                elif event.key == K_l:
+                    nao.turn_left()
 
-        elif key == 'l':
-            nao.turn_left()
+                elif event.key == K_r:
+                    nao.turn_right()
 
-        elif key == 'r':
-            nao.turn_right()
+                elif event.key == K_s:
+                    nao.stop()
 
-        elif key == 's':
-            nao.stop()
-
-        elif key == 'w':
-            nao.wait()
+                elif event.key == K_w:
+                    nao.wait()
 
         if nao.state == 'end':
             run = False
@@ -85,4 +76,4 @@ def main(stdscr):
 
 
 if __name__ == '__main__':
-    curses.wrapper(main)
+    main()
