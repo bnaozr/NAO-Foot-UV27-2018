@@ -34,6 +34,8 @@ if (len(sys.argv) >= 3):
 print robotIp
 print robotPort
 
+
+
 # Init proxies.
 try:
     motionProxy = ALProxy("ALMotion", robotIp, robotPort)
@@ -78,14 +80,14 @@ def go():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    if (valL<=0.5 or valR<=0.5):
+    if (valL<=0.3 or valR<=0.3):
         motionProxy.stopMove()
         event="Obstacle"
     else:
         x  = 1.0
         y  = 0.0
         theta  = 0.0
-        frequency  = 1.0
+        frequency  = 0.75
         motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
         event="PressG" # define the default event
         key_pressed = pygame.key.get_pressed()
@@ -137,7 +139,7 @@ def turnLeft():
     x  = 0.1
     y  = 0.0
     theta  = math.pi/4.0 
-    frequency  = 1.0
+    frequency  = 0.75
     motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressL" # define the default event
     key_pressed = pygame.key.get_pressed()
@@ -154,7 +156,7 @@ def turnRight():
     x  = 0.1
     y  = 0.0
     theta  = -math.pi/4.0 
-    frequency  = 1.0
+    frequency  = 0.75
     motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressR" # define the default event
     key_pressed = pygame.key.get_pressed()
@@ -189,17 +191,29 @@ def evitement():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    if valR<valL:  
-        x  = 0.1
-        y  = 0.0
-        theta  = math.pi/4.0 
-        motionProxy.moveTo (x, y, theta)
+    if valR<valL:
+        while valR<=0.40:
+            x  = 0.1
+            y  = 0.0
+            theta  = math.pi/6.0 
+            frequency=0.75
+            motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+            sonarProxy.subscribe("SonarApp")
+            valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+            sonarProxy.unsubscribe("SonarApp")
+        motionProxy.stopMove()
         event="FinObstacle"
     else:  
-        x  = 0.1
-        y  = 0.0
-        theta  = -math.pi/4.0 
-        motionProxy.moveTo (x, y, theta)
+        while valL<=0.40:
+            x  = 0.1
+            y  = 0.0
+            theta  =-math.pi/6.0 
+            frequency=0.75
+            motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+            sonarProxy.subscribe("SonarApp")
+            valL = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+            sonarProxy.unsubscribe("SonarApp")
+        motionProxy.stopMove()
         event="FinObstacle"
     return event
 
