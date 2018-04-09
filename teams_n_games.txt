@@ -12,7 +12,7 @@ Composition des six équipes :
 
 Equipe 1 : IGN
 Pseudo :  team_ImGettingNothing
-Membres :Corentin J., Erwann L, Simon Q., Alexandre C., Matthieu B., Jonathan G.
+Membres :Corentin J., Erwann L, Simon Q., Alexandre C., Matthieu B., Jonathan G., Félix L.B.,
 
 
 Equipe 2 :
@@ -34,7 +34,7 @@ Membres :
 Equipe 6 :
 Pseudo :  team_
 Membres : 
-
+git log
 ------------------------------------------------------
 Challenge
 
