@@ -34,6 +34,8 @@ if (len(sys.argv) >= 3):
 print robotIp
 print robotPort
 
+
+
 # Init proxies.
 try:
     motionProxy = ALProxy("ALMotion", robotIp, robotPort)
@@ -79,7 +81,7 @@ def go():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    if (valL<=0.5 or valR<=0.5):
+    if (valL<=0.3 or valR<=0.3):
         motionProxy.stopMove()
         event="Obstacle"
     else:
@@ -254,24 +256,31 @@ def evitement():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    x  = 0.1
-    y  = 0.0
-    frequency = 0.75
-    while valR<valL or valL<valR:  
-        if valR<valL:
+    if valR<valL:
+        while valR<=0.30:
+            x  = 0.1
+            y  = 0.0
             theta  = math.pi/4.0 
+            frequency=0.75
             motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
-        else:
-            theta = -math.pi/4.0
+            sonarProxy.subscribe("SonarApp")
+            valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+            sonarProxy.unsubscribe("SonarApp")
+        motionProxy.stopMove()
+        event="FinObstacle"
+    else:  
+        while valL<=0.30:
+            x  = 0.1
+            y  = 0.0
+            theta  =-math.pi/4.0 
+            frequency=0.75
             motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
-        sonarProxy.subscribe("SonarApp")
-        valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
-        valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
-        sonarProxy.unsubscribe("SonarApp")
-    
-    motionProxy.stopMove()
-    event="FinObstacle"
-    
+            sonarProxy.subscribe("SonarApp")
+            valL = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+            sonarProxy.unsubscribe("SonarApp")
+        motionProxy.stopMove()
+        event="FinObstacle"
+
     return event
 
 # define here all the other functions (actions) of the fsm 
