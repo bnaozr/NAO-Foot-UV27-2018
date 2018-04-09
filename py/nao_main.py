@@ -73,6 +73,7 @@ motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
 # functions (actions of the fsm)
 # example of a function doRun 
 def go():
+    global transitionState
     print ">>>>>> action : runs for his life"
     sonarProxy.subscribe("SonarApp")
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
@@ -85,18 +86,31 @@ def go():
         x  = 1.0
         y  = 0.0
         theta  = 0.0
-        frequency  = 1.0
+        frequency  = 0.75
         motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
         event="PressG" # define the default event
         key_pressed = pygame.key.get_pressed()
 
-    
+        transitionState = None
         if key_pressed[pygame.K_w]:
             motionProxy.stopMove()
             event="PressW"
         if key_pressed[pygame.K_s]:
             motionProxy.stopMove()
             event="PressS" 
+        if key_pressed[pygame.K_r]:
+            motionProxy.stopMove()
+            event = "PressW"
+            transitionState = "PressR"
+        if key_pressed[pygame.K_g]:
+            motionProxy.stopMove()
+            event = "PressW"
+            transitionState = "PressG"
+        if key_pressed[pygame.K_e]:
+            motionProxy.stopMove()
+            event = "PressS"
+            transitionState = "PressE"
+            
     return event # return event to be able to define the transition
 
 def wakeUp():
@@ -116,45 +130,77 @@ def wakeUp():
         event="PressL" 
     if key_pressed[pygame.K_r]:
         event="PressR" 
+        
     return event
 
 def stand():
     print ">>>>>> action : stand still"   # depuis naocmd
+    global transitionState
     event="PressW" # define the default event
-    key_pressed = pygame.key.get_pressed()
-    if key_pressed[pygame.K_g]:
-        event="PressG"  
-    if key_pressed[pygame.K_s]:
-        event="PressS" 
-    if key_pressed[pygame.K_l]:
-        event="PressL" 
-    if key_pressed[pygame.K_r]:
-        event="PressR" 
+    
+    if transitionState == None:
+        key_pressed = pygame.key.get_pressed()
+        if key_pressed[pygame.K_g]:
+            time.sleep(1.0)
+            event="PressG"  
+        if key_pressed[pygame.K_s]:
+            time.sleep(1.0)
+            event="PressS" 
+        if key_pressed[pygame.K_l]:
+            time.sleep(1.0)
+            event="PressL" 
+        if key_pressed[pygame.K_r]:
+            time.sleep(1.0)
+            event="PressR"
+    elif transitionState == "PressG":
+        event = "PressG"
+    elif transitionState == "PressL":
+        event = "PressL"
+    elif transitionState == "PressR":
+        event = "PressR"
+    elif transitionState == "PressE":
+        event = "PressE"
     return event
 
 def turnLeft():
     print ">>>>>> action : turn left"   # do some work
+    global transitionState
     x  = 0.1
     y  = 0.0
     theta  = math.pi/4.0 
-    frequency  = 1.0
+    frequency  = 0.75
     motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressL" # define the default event
     key_pressed = pygame.key.get_pressed()
+    transitionState = None
     if key_pressed[pygame.K_s]:
         motionProxy.stopMove()
-        event="PressS" 
+        event="PressS"
     if key_pressed[pygame.K_w]:
         motionProxy.stopMove()
-        event="PressW" 
+        event="PressW"
+    if key_pressed[pygame.K_r]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressR"
+    if key_pressed[pygame.K_g]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressG"
+    if key_pressed[pygame.K_e]:
+        motionProxy.stopMove()
+        event = "PressS"
+        transitionState = "PressE"
+
     return event
 
 def turnRight():
     print ">>>>>> action : turn right"   # do some work
+    global transitionState
     x  = 0.1
     y  = 0.0
     theta  = -math.pi/4.0 
-    frequency  = 1.0
+    frequency  = 0.75
     motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressR" # define the default event
     key_pressed = pygame.key.get_pressed()
@@ -164,19 +210,38 @@ def turnRight():
     if key_pressed[pygame.K_w]:
         motionProxy.stopMove()
         event="PressW"
+    if key_pressed[pygame.K_l]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressL"
+    if key_pressed[pygame.K_g]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressG"
+    if key_pressed[pygame.K_e]:
+        motionProxy.stopMove()
+        event = "PressS"
+        transitionState = "PressE"
+        
     return event
 
 def sleep():
     print ">>>>>> action : sleep"   # do some work
+    global transitionState
     motionProxy.rest()                             # depuis naocmd
     event="PressS" # define the default event
     key_pressed = pygame.key.get_pressed()
-    if key_pressed[pygame.K_s]:
-        event="PressS"
-    if key_pressed[pygame.K_w]:
-        event="PressW"
-    if key_pressed[pygame.K_e]:
-        event="End"
+    if transitionState == None:
+        if key_pressed[pygame.K_s]:
+            event="PressS"
+        if key_pressed[pygame.K_w]:
+            event="PressW"
+        if key_pressed[pygame.K_e]:
+            event="End"
+    elif transitionState == "PressS":
+        event = "End"
+
+        
     return event
 
 def end():
@@ -189,18 +254,24 @@ def evitement():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    if valR<valL:  
-        x  = 0.1
-        y  = 0.0
-        theta  = math.pi/4.0 
-        motionProxy.moveTo (x, y, theta)
-        event="FinObstacle"
-    else:  
-        x  = 0.1
-        y  = 0.0
-        theta  = -math.pi/4.0 
-        motionProxy.moveTo (x, y, theta)
-        event="FinObstacle"
+    x  = 0.1
+    y  = 0.0
+    frequency = 0.75
+    while valR<valL or valL<valR:  
+        if valR<valL:
+            theta  = math.pi/4.0 
+            motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+        else:
+            theta = -math.pi/4.0
+            motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+        sonarProxy.subscribe("SonarApp")
+        valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
+        valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+        sonarProxy.unsubscribe("SonarApp")
+    
+    motionProxy.stopMove()
+    event="FinObstacle"
+    
     return event
 
 # define here all the other functions (actions) of the fsm 
@@ -240,13 +311,19 @@ if __name__== "__main__":
     f.add_transition ("TournerDroite","Pret","PressW",stand)
     f.add_transition ("TournerDroite","Veille","PressS",sleep)
     f.add_transition ("TournerDroite","TournerDroite","PressR",turnRight)
+    f.add_transition ("TournerDroite","TournerGauche","PressL",turnLeft)
+    f.add_transition ("TournerDroite","Avancer","PressG",go)
     f.add_transition ("TournerGauche","Veille","PressS",sleep)
     f.add_transition ("TournerGauche","Pret","PressW",stand)
     f.add_transition ("TournerGauche","TournerGauche","PressL",turnLeft)
+    f.add_transition ("TournerGauche","TournerDroite","PressR",turnRight)
+    f.add_transition ("TournerGauche","Avancer","PressG",go)
     f.add_transition ("Avancer","Pret","PressW",stand)
     f.add_transition ("Avancer","Veille","PressS",sleep)
     f.add_transition ("Avancer","Avancer","PressG",go)
     f.add_transition ("Avancer","Evitement","Obstacle",evitement)
+    f.add_transition ("Avancer","TournerGauche","PressL",turnLeft)
+    f.add_transition ("Avancer","TournerDroite","PressR",turnRight)
     f.add_transition ("Evitement","Avancer","FinObstacle",go)
     
 
@@ -259,6 +336,7 @@ if __name__== "__main__":
 
  
     # fsm loop
+    transitionState = None
     run = True   
     while (run):
         pygame.event.pump()
