@@ -31,8 +31,11 @@ Pseudo :  team_
 Membres : 
 
 Equipe 6 :
-Pseudo :  team_
-Membres : Nelson Wouogang
+Pseudo :  
+Membres : 
+Nelson Wouogang
+Quentin DUCASSE
+
 
 ------------------------------------------------------
 Challenge
