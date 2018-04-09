@@ -31,9 +31,13 @@ Pseudo :  team_
 Membres : 
 
 Equipe 6 :
-Pseudo : 
+
+Pseudo :  
 Membres : 
-Quentin DUCASSE
+Valentin Chazelas
+Nelson Wouogang
+Quentin Ducasse
+Florian Gaurier
 
 ------------------------------------------------------
 Challenge
