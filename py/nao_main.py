@@ -104,10 +104,10 @@ def go():
             motionProxy.stopMove()
             event = "PressW"
             transitionState = "PressR"
-        if key_pressed[pygame.K_g]:
+        if key_pressed[pygame.K_l]:
             motionProxy.stopMove()
             event = "PressW"
-            transitionState = "PressG"
+            transitionState = "PressL"
         if key_pressed[pygame.K_e]:
             motionProxy.stopMove()
             event = "PressS"
@@ -240,7 +240,7 @@ def sleep():
             event="PressW"
         if key_pressed[pygame.K_e]:
             event="End"
-    elif transitionState == "PressS":
+    elif transitionState == "PressE":
         event = "End"
 
         
@@ -359,6 +359,5 @@ if __name__== "__main__":
             run = False
             
     print "End of the programm"
-
 
 
