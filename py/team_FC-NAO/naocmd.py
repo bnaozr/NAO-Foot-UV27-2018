@@ -68,6 +68,13 @@ def tout_droit(motion,posture,freq):
     theta  = 0.0
     motion.setWalkTargetVelocity(x, y, theta, freq)
 
+def marche_arriere(motion,posture,freq):
+    motion.stopMove()
+    x  = -1.0
+    y  = 0.0
+    theta  = 0.0
+    motion.setWalkTargetVelocity(x, y, theta, freq)
+    
 def tourner_a_gauche(motion,freq):
     motion.stopMove()
     x  = 0.0
