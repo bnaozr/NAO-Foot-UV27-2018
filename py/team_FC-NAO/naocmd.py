@@ -45,7 +45,7 @@ def initialisation():
     motionProxy.wakeUp()
     motionProxy.setStiffnesses("Body", 1.0)
 
-    return(motionProxy,postureProxy,sonarProxy, memoryProxy)
+    return(motionProxy,postureProxy,sonarProxy,memoryProxy)
 
 def decal_droite(motion,posture,freq):
     motion.stopMove()

@@ -221,7 +221,7 @@ def goRight():
         if val==t_b:
             move_flag=False
             event="Go back"
-   if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
+    if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
     lastevent="Right"   
@@ -265,7 +265,7 @@ def goBack():
     global move_flag,lastevent
     if not(move_flag):
         move_flag=True
-        naocmd.decal_gauche(motion,posture,1)    
+        naocmd.marche_arriere(motion,posture,1)    
         print "Recule"   
     time.sleep(0.5)
     newKey,val = getKey(); 
@@ -344,7 +344,7 @@ if __name__== "__main__":
     f.add_transition ("Gauche","Tourne a gauche","Turn on the Left",left)
     f.add_transition ("Gauche","Tourne a droite","Turn on the Right",right)
     f.add_transition ("Gauche","Idle","Wait",doWait)
-    f.add_transition ("Droite","Droite","Right",goRight)
+    f.add_transition ("Gauche","Droite","Right",goRight)
     f.add_transition ("Gauche","Evitement","Obstacle",evitement)
     f.add_transition ("Gauche","Arriere","Go back",goBack)
 
