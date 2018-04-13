@@ -1,3 +1,4 @@
+ # -*-coding:utf-8 -*
 import fsm
 import time
 import pygame
@@ -64,11 +65,11 @@ voicePxy.say("Bonjour")
 ### Partie pour obtenir une vue du robot
 
 # proxy naoqi
-videoDevice = ALProxy('ALVideoDevice', robotIP, robotPort)
+videoDevice = ALProxy('ALVideoDevice', robotIp, robotPort)
 
 # subscribe top camera
 AL_kTopCamera = 0       #camera du haut
-AL_kQVGA = 1            # pour une image à 320*240px
+AL_kQVGA = 1 # pour une image à 320*240px
 AL_kBGRColorSpace = 13  #code pour obtenir rgb
 captureDevice = videoDevice.subscribeCamera("test", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
 
@@ -189,7 +190,7 @@ def getKey():
 
 
 def doRun():
-    if State == "AvanceRapide" or state == "Recule" : motionProxy.stopMove()
+    if State == "AvanceRapide" or State == "Recule" : motionProxy.stopMove()
     motionProxy.setWalkTargetVelocity(x, y, 0, frequency)
     print(">>>>>> action : run for 1 s")   # do some work
     sonarProxy.subscribe("myApplication")
@@ -291,7 +292,7 @@ def doWait():
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_SPACE:
-            event="Fonctionne"
+            event="Wait"
         if c==pygame.K_b:
             event="Bed"
         if c==pygame.K_LSHIFT:
@@ -315,18 +316,22 @@ def doStrafeLWM():
     newKey,c = getKey(); # check if key pressed
     event = "StrafeL"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_RIGHT:
             event="StrafeR2"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
+        if c==pygame.K_LSHIFT:
+            event = "Gofast"
     return event
 
 
@@ -337,18 +342,22 @@ def doStrafeRWM():
     newKey,c = getKey(); # check if key pressed
     event = "StrafeR"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_LEFT:
             event="StrafeL2"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
+        if c==pygame.K_LSHIFT:
+            event = "Gofast"
     return event
 
 def doStrafeLWS():
@@ -357,21 +366,25 @@ def doStrafeLWS():
     newKey,c = getKey(); # check if key pressed
     event = "StrafeL"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_RIGHT:
             event="StrafeR2"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
+        if c==pygame.K_LSHIFT:
+            event = "Gofast"
     return event
 
-def doStarfeRWS():
+def doStrafeRWS():
     motionProxy.setWalkTargetVelocity(0, -1, 0, frequency)
     print(">>>>>> action : strafe right for 1 s")   # do some work
     sonarProxy.subscribe("myApplication")
@@ -382,18 +395,22 @@ def doStarfeRWS():
     newKey,c = getKey(); # check if key pressed
     event = "StrafeR"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_LEFT:
             event="StrafeL2"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
+        if c==pygame.K_LSHIFT:
+            event = "Gofast"
     return event
 
 def doCrouch():
@@ -546,6 +563,12 @@ def KickRight():
     newKey,c = getKey();
     event = "Wait"
     if newKey:
+        if c==pygame.K_b:
+            event="Bed"
+        if c==pygame.K_LSHIFT:
+            event = "Gofast"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
 
 def doFast():
     motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.3)
@@ -691,7 +714,7 @@ if __name__== "__main__":
     f.add_transition ("Ready","Strafe","StrafeL",doStrafeLWS)
 
     f.add_transition ("Strafe","Strafe","StrafeR",doStrafeRWS);
-    f.add_transition ("Strafe","Strafe","StrafeR",doStrafeRWS);
+    f.add_transition ("Strafe","Strafe","StrafeL",doStrafeLWS);
     f.add_transition ("Strafe","Ready","Wait",doWait);
     f.add_transition ("Strafe","Rotation","TurnL",TurnLeft);
     f.add_transition ("Strafe","Rotation","TurnR",TurnRight);
