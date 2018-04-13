@@ -582,7 +582,7 @@ def KickLeft():
     if newKey:
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_qSHIFT:
+        if c==pygame.K_LSHIFT:
             event = "Gofast"
         if c==pygame.K_DOWN:
             event = "MovingBackward"
