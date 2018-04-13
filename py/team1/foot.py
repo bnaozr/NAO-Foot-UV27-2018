@@ -29,14 +29,14 @@ def main():
 			{'trigger': 'quit', 'source': 'idle', 'dest': 'end',
                 'before': 'doQuit'},
 			{'trigger': 'standby', 'source': 'idle', 'dest': 'rest',
-                'before': 'doStandby'}
-            ]+#état de départ end,on ne peut pas sortir de l'état end
-			
-			[ {'trigger': 'quit', 'source': 'end', 'dest': 'end',
-                'before': 'doQuit'}
-			]+#état de départ leftward
-			
-			[ {'trigger': 'left', 'source': 'leftward', 'dest': 'leftward',
+                'before': 'doWakeUp'},
+
+      #état de départ end,on ne peut pas sortir de l'état end
+			{'trigger': 'quit', 'source': 'end', 'dest': 'end',
+                'before': 'doQuit'}, 
+
+      #état de départ leftward	
+			{'trigger': 'left', 'source': 'leftward', 'dest': 'leftward',
                 'before': 'doLeft'},
 			{'trigger': 'right', 'source': 'leftward', 'dest': 'rightward',
                 'before': 'doRight'},
@@ -51,10 +51,10 @@ def main():
 			{'trigger': 'sleep', 'source': 'leftward', 'dest': 'idle',
                 'before': 'doSleep'},
 			{'trigger': 'quit', 'source': 'leftward', 'dest': 'end',
-                'before': 'doQuit'}
-			]+#état de départ rightward
-			
-			[ {'trigger': 'right', 'source': 'rightward', 'dest': 'rightward',
+                'before': 'doQuit'},
+      
+      #état de départ rightward			
+			{'trigger': 'right', 'source': 'rightward', 'dest': 'rightward',
                 'before': 'doRight'},
 			{'trigger': 'standby', 'source': 'rightward', 'dest': 'rest',
                 'before': 'doStandby'},
@@ -69,10 +69,10 @@ def main():
 			{'trigger': 'quit', 'source': 'rightward', 'dest': 'end',
                 'before': 'doQuit'},
 			{'trigger': 'left', 'source': 'rightward', 'dest': 'leftward',
-                'before': 'doLeft'}
-			]+#état de départ rest
-			
-			[ {'trigger': 'standby', 'source': 'rest', 'dest': 'rest',
+                'before': 'doLeft'},
+
+      #état de départ rest			
+			{'trigger': 'standby', 'source': 'rest', 'dest': 'rest',
                 'before': 'doStandby'},
 			{'trigger': 'go', 'source': 'rest', 'dest': 'forward',
                 'before': 'doGo'},
@@ -87,10 +87,10 @@ def main():
 			{'trigger': 'left', 'source': 'rest', 'dest': 'leftward',
                 'before': 'doLeft'},
 			{'trigger': 'right', 'source': 'rest', 'dest': 'rightward',
-                'before': 'doRight'}
-			]+#état de départ forward
-			
-			[ {'trigger': 'go', 'source': 'forward', 'dest': 'forward',
+                'before': 'doRight'},
+
+      #état de départ forward			
+			{'trigger': 'go', 'source': 'forward', 'dest': 'forward',
                 'before': 'doGo'},
 			{'trigger': 'goback', 'source': 'forward', 'dest': 'backward',
                 'before': 'doGoback'},
@@ -105,10 +105,10 @@ def main():
 			{'trigger': 'right', 'source': 'forward', 'dest': 'rightward',
                 'before': 'doRight'},
 			{'trigger': 'standby', 'source': 'forward', 'dest': 'rest',
-                'before': 'doStandby'}
-			]+#état de départ backward
-			
-			[ {'trigger': 'goback', 'source': 'backward', 'dest': 'backward',
+                'before': 'doStandby'},
+
+      #état de départ backward
+			{'trigger': 'goback', 'source': 'backward', 'dest': 'backward',
                 'before': 'doGoback'},
 			{'trigger': 'shoot', 'source': 'backward', 'dest': 'shooting',
                 'before': 'doShoot'},
@@ -123,60 +123,67 @@ def main():
 			{'trigger': 'standby', 'source': 'backward', 'dest': 'rest',
                 'before': 'doStandby'},
 			{'trigger': 'go', 'source': 'backward', 'dest': 'forward',
-                'before': 'doGo'}
-			]+#état de départ shooting, après le tire le nao se remet droit 
+                'before': 'doGo'},
+
+      #état de départ shooting, après le tire le nao se remet droit 
 			#et laisse la main au joueur
-			
-			[{'trigger': 'standby', 'source': 'shooting', 'dest': 'rest',
-                'before': 'doStandby'}
-			]
+		  {'trigger': 'standby', 'source': 'shooting', 'dest': 'rest',
+                'before': 'doStandby'}]
 			
 
     machine = Machine(model=nao, states=states, transitions=transitions,
                       initial='idle', ignore_invalid_triggers=True)
 
+    xref, yref, _ = nao.get_pos()
+    scale = 50
+    l = 640
+    h = 480
     pg.init()
-    window = pg.display.set_mode((640, 480))
-    pg.draw.rect(window, (0,255,0), (20, 20, 600, 200), 0)
-    pg.display.flip()
+    window = pg.display.set_mode((l, h))
 
-    pos = np.array([20, 20])
-    naoRect = pg.draw.circle(window, (0,0,255), pos, 3) 
+    detect_obstacle = True
 
     run = True
     while run:
         for event in pg.event.get():
             if event.type == KEYDOWN:
-                if event.key == K_b:
-                    nao.back()
+                if event.key == K_DOWN:
+                    nao.goback()
 
-                elif event.key == K_c:
-                    nao.rest()
-
-                elif event.key == K_g:
+                elif event.key == K_UP:
                     nao.go()
 
-                elif event.key == K_l:
-                    nao.turn_leftward()
+                elif event.key == K_LEFT:
+                    nao.left()
 
-                elif event.key == K_r:
-                    nao.turn_rightward()
+                elif event.key == K_RIGHT:
+                    nao.right()
+
+                elif event.key == K_SPACE:
+                    nao.shoot()
+
+                elif event.key == K_q:
+                    nao.quit()
+
+                elif event.key == K_RETURN:
+                    nao.standby()
 
                 elif event.key == K_s:
-                    nao.stop()
+                    nao.sleep()
 
-                elif event.key == K_w:
-                    nao.wait()
+                elif event.key == K_o:
+                    detect_obstacle = !detect_obstacle
 
         if nao.state == 'end':
             run = False
-        if nao.state == 'forward': #à modifier
+        if nao.state == 'forward' and detect_obstacle:
             nao.avoid_obstacle()
-		#on peut remplacer cela par doQuit
-        pos_prev = pos
+
         x, y, theta = nao.get_pos()
-        pos = [x, y]
-        naoRect.move_ip(pos-pos_prev)
+        x = int((x-xref)*scale)+l/2 
+        y = -int((y-yref)*scale)+h/2
+        window.fill((0,255,0))
+        pg.draw.circle(window, (0,0,255), (x,y), 6)
 
         pg.display.flip()
         pg.time.delay(100)
