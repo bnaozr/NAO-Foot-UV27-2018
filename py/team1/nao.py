@@ -18,25 +18,25 @@ class Nao:
         d_right = self.memory.getData(
                 "Device/SubDeviceList/US/Right/Sensor/Value")
 
-        if d_left < 0.5:
+        if d_left < 0.3:
             self.wait()
             self.turn_right()
 
-        elif d_right < 0.5:
+        elif d_right < 0.3:
             self.wait()
             self.turn_left()
 
     def crouch(self):
         self.motion.rest()
 
-    def on_right_detected(self, **args):
-        pass
+    def get_pos(self):
+        return self.motion.getRobotPosition(True)
+
 
     def rotate_left(self):
         self.motion.move(0, 0, 0.2)
 
-    def rotate_right(self):
-        self.motion.move(0, 0, -0.2)
+    
 
     def stop_move(self):
         self.motion.stopMove()
@@ -49,3 +49,31 @@ class Nao:
 
     def walk_back(self):
         self.motion.move(-0.1, 0, 0)
+	
+	#fonction de transitions en doNomévénement
+	
+	def doQuit(self):
+		pass
+		
+	def doRight(self):
+        self.motion.move(0, 0, -0.2)
+		
+	def doLeft(self):
+		pass
+		
+	def doSleep(self):
+		pass
+	
+	def doStop(self):
+		pass
+		
+	def doGo(self):
+		pass
+	
+	def doGoback(self):
+		pass
+	
+	def doShoot(self):
+		pass
+	
+	
