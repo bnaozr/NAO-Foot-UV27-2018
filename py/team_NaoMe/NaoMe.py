@@ -185,6 +185,10 @@ def TurnRight():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_a:
+            event="KickL"
+        if c==pygame.K_p:
+            event="KickR"
         if c==pygame.K_z:
             event = "Gofast"
         if c==pygame.K_d:
@@ -206,6 +210,10 @@ def TurnLeft():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_a:
+            event="KickL"
+        if c==pygame.K_p:
+            event="KickR"
         if c==pygame.K_z:
             event = "Gofast"
         if c==pygame.K_d:
@@ -230,6 +238,10 @@ def doWait():
             event="Fonctionne"
         if c==pygame.K_b:
             event="Bed"
+        if c==pygame.K_a:
+            event="KickL"
+        if c==pygame.K_p:
+            event="KickR"
         if c==pygame.K_z:
             event = "Gofast"
         if c==pygame.K_d:
@@ -258,8 +270,6 @@ def dofonctionne():
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
-        if c==pygame.K_w:
-            event="Wait"
         if c==pygame.K_r:
             event="TurnR"
         if c==pygame.K_g:
@@ -270,6 +280,10 @@ def dofonctionne():
             event="Bed"
         if c==pygame.K_l:
             event="TurnL"
+        if c==pygame.K_a:
+            event="KickL"
+        if c==pygame.K_p:
+            event="KickR"
         if c==pygame.K_d:
             event = "MovingBackward"
     return event
@@ -333,6 +347,52 @@ def Stop():
     print(">>>>>> Fin du programme") 
     return "Stop"
 
+
+''' Elements utilises dans les fonctions de tir '''
+
+
+axisMask     = 63
+space        = motion.FRAME_ROBOT
+dx      = 0.05                 
+dz      = 0.05                 
+dwy     = 5.0*math.pi/180.0
+times   = [2.0, 2.7, 4.5]
+isAbsolute = False
+targetList = [
+[-dx, 0.0, dz, 0.0, +dwy, 0.0],
+[+dx, 0.0, dz, 0.0, 0.0, 0.0],
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+
+def KickOn():
+    motionProxy.stopMove()
+    motionProxy.stiffnessInterpolation("Body",1.0,1.0)
+    postureProxy.goToPosture("StandInit",0.5)
+    motionProxy.wbEnable(True)
+    motionProxy.wbFootState("Fixed","Legs")
+    motionProxy.wbEnableBalanceConstraint(True, "Legs")
+    return None
+
+def KickOff():
+    motionProxy.wbEnable(False)
+    motionProxy.stiffnessInterpolation("Body",1.0,1.0)
+    postureProxy.goToPosture("StandInit",0.5)
+    return None
+    
+
+def KickRight():
+    KickOn()
+    Shooting_Leg= "RLeg"
+    SupportLeg= "LLeg"
+    motionProxy.wbGoToBalance(SupportLeg, 2.0)
+    motionProxy.wbFootState("Free", Shooting_Leg)
+    motionProxy.positionInterpolation(Shooting_Leg, space, targetList,axisMask, times, isAbsolute)
+    KickOff()
+    print(">>>>>> action : Tir Droit")
+    time.sleep(1.0)
+    newKey,c = getKey();
+    event = "Wait"
+    if newKey:
+
 def doFast():
     motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.7)
     print(">>>>>> action : Avance Rapide pendant 1 s")
@@ -350,6 +410,22 @@ def doFast():
             event="Stop"
         if c==pygame.K_w:
             event="Wait"
+
+    return event
+
+def KickLeft():
+    KickOn()
+    Shooting_Leg= "LLeg"
+    SupportLeg= "RLeg"
+    motionProxy.wbGoToBalance(SupportLeg, 2.0)
+    motionProxy.wbFootState("Free", Shooting_Leg)
+    motionProxy.positionInterpolation(Shooting_Leg, space, targetList,axisMask, times, isAbsolute)
+    KickOff()
+    print(">>>>>> action : Tir Gauche")
+    time.sleep(1.0)
+    newKey,c = getKey();
+    event = "Wait"
+    if newKey:
         if c==pygame.K_b:
             event="Bed"
         if c==pygame.K_z:
@@ -378,6 +454,7 @@ def doRecule():
             event = "MovingBackward"
     return event
 
+
 if __name__== "__main__":
     
     # define the states
@@ -386,6 +463,7 @@ if __name__== "__main__":
     f.add_state ("Deplacement")
     f.add_state ("Rotation")
     f.add_state ("End")
+    f.add_state ("Kick")
     f.add_state ("AvanceRapide")
     f.add_state ("Recule")
     f.add_state ("Avoid")
@@ -399,6 +477,8 @@ if __name__== "__main__":
     f.add_event ("Stop")
     f.add_event ("Fonctionne")
     f.add_event ("Bed")
+    f.add_event ("KickR")
+    f.add_event ("KickL")
     f.add_event ("Gofast")
     f.add_event ("MovingBackward")
     f.add_event ("Obstacle")
@@ -411,6 +491,8 @@ if __name__== "__main__":
     f.add_transition ("Ready","Rotation","TurnL",TurnLeft);
     f.add_transition ("Ready","End","Stop",Stop);
     f.add_transition ("Ready","Idle","Bed",doCrouch);
+    f.add_transition ("Ready","Kick","KickR",KickRight);
+    f.add_transition ("Ready","Kick","KickL",KickLeft);
     f.add_transition ("Ready","AvanceRapide","Gofast",doFast);
     f.add_transition ("Ready","Recule","MovingBackward",doRecule);
     
@@ -419,6 +501,8 @@ if __name__== "__main__":
     f.add_transition ("Rotation","Rotation","TurnL",TurnLeft);
     f.add_transition ("Rotation","End","Stop",Stop);
     f.add_transition ("Rotation","Deplacement","Go",doRun);
+    f.add_transition ("Rotation","Kick","KickR",KickRight);
+    f.add_transition ("Rotation","Kick","KickL",KickLeft);
     f.add_transition ("Rotation","AvanceRapide","Gofast",doFast);
     f.add_transition ("Rotation","Recule","MovingBackward",doRecule);
     
@@ -427,12 +511,16 @@ if __name__== "__main__":
     f.add_transition ("Deplacement","Rotation","TurnL",TurnLeft);
     f.add_transition ("Deplacement","Rotation","TurnR",TurnRight);
     f.add_transition ("Deplacement","End","Stop",Stop);
+    f.add_transition ("Deplacement","Kick","KickR",KickRight);
+    f.add_transition ("Deplacement","Kick","KickL",KickLeft);
     f.add_transition ("Deplacement","AvanceRapide","Gofast",doFast);
     f.add_transition ("Deplacement","Avoid","Obstacle",doAvoid)
     f.add_transition ("Idle","Ready","Fonctionne",dofonctionne);
     f.add_transition ("Idle","End","Stop",Stop);
     f.add_transition ("Idle","Idle","Bed",doCrouch);
     
+    f.add_transition ("Kick","Ready","Wait",doWait);
+    f.add_transition ("Kick","End","Stop",Stop);
     f.add_transition ("AvanceRapide","Ready","Wait",doWait);
     f.add_transition ("AvanceRapide","AvanceRapide","Gofast",doFast);
     f.add_transition ("AvanceRapide","Rotation","TurnR",TurnRight);
