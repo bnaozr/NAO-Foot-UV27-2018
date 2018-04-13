@@ -222,7 +222,10 @@ def Stop():
     return "Stop"
 
 def doFast():
-    motionProxy.setWalkTargetVelocity(x, y, 0, frequency)
+    motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.7)
+    print(">>>>>> action : Avance Rapide pendant 1 s")
+    time.sleep(1.0)
+    
     
 
 if __name__== "__main__":
