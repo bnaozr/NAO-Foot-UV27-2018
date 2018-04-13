@@ -172,6 +172,10 @@ def doRun():
             event = "Gofast"
         if c==pygame.K_DOWN:
             event = "MovingBackward"
+        if c==pygame.K_LEFT:
+            event="StrafeL"
+        if c==pygame.K_RIGHT:
+            event="StrafeR"
     return event
 
 def TurnRight():
@@ -197,6 +201,10 @@ def TurnRight():
             event="KickR"
         if c==pygame.K_DOWN:
             event = "MovingBackward"
+        if c==pygame.K_LEFT:
+            event="StrafeL"
+        if c==pygame.K_RIGHT:
+            event="StrafeR"
     return event
 
 def TurnLeft():
@@ -222,6 +230,10 @@ def TurnLeft():
             event="KickR"
         if c==pygame.K_DOWN:
             event = "MovingBackward"
+        if c==pygame.K_LEFT:
+            event="StrafeL"
+        if c==pygame.K_RIGHT:
+            event="StrafeR"
     return event
 
 def doWait():
@@ -250,6 +262,10 @@ def doWait():
             event="KickR"
         if c==pygame.K_DOWN:
             event = "MovingBackward"
+        if c==pygame.K_LEFT:
+            event="StrafeL"
+        if c==pygame.K_RIGHT:
+            event="StrafeR"
     return event
 
 def doStrafeLWM():
@@ -269,6 +285,8 @@ def doStrafeLWM():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_RIGHT:
+            event="StrafeR2"
     return event
 
 
@@ -289,6 +307,8 @@ def doStrafeRWM():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_LEFT:
+            event="StrafeL2"
     return event
 
 def doStrafeLWS():
@@ -307,6 +327,8 @@ def doStrafeLWS():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_RIGHT:
+            event="StrafeR2"
     return event
 
 def doStarfeRWS():
@@ -330,6 +352,8 @@ def doStarfeRWS():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_LEFT:
+            event="StrafeL2"
     return event
 
 def doCrouch():
@@ -371,7 +395,11 @@ def dofonctionne():
         if c==pygame.K_a:
             event="KickL"
         if c==pygame.K_e:
-            event="KickR"       
+            event="KickR"
+        if c==pygame.K_LEFT:
+            event="StrafeL"
+        if c==pygame.K_RIGHT:
+            event="StrafeR"
     return event
 
 def doAvoid():
@@ -541,8 +569,11 @@ def doRecule():
             event="Bed"
         if c==pygame.K_DOWN:
             event = "MovingBackward"
+        if c==pygame.K_LEFT:
+            event="StrafeL"
+        if c==pygame.K_RIGHT:
+            event="StrafeR"
     return event
-
 
 if __name__== "__main__":
     
@@ -566,6 +597,8 @@ if __name__== "__main__":
     f.add_event ("TurnL")
     f.add_event ("StrafeR")
     f.add_event ("StrafeL")
+    f.add_event ("StrafeR2")
+    f.add_event ("StrafeL2")
     f.add_event ("Stop")
     f.add_event ("Fonctionne")
     f.add_event ("Bed")
@@ -623,6 +656,14 @@ if __name__== "__main__":
     f.add_transition ("Strafe","Rotation","TurnL",TurnLeft);
     f.add_transition ("Strafe","Rotation","TurnR",TurnRight);
     f.add_transition ("Strafe","End","Stop",Stop);
+    f.add_transition ("Recule","Strafe","StrafeR",doStrafeRWM)
+    f.add_transition ("Recule","Strafe","StrafeL",doStrafeLWM)
+    f.add_transition ("AvanceRapide","Strafe","StrafeR",doStrafeRWM)
+    f.add_transition ("AvanceRapide","Strafe","StrafeL",doStrafeLWM)
+    f.add_transition ("Strafe","AvanceRapide","Gofast",doFast)
+    f.add_transition ("Strafe","Recule","MovingBackward",doRecule)
+    f.add_transition ("Strafe","Strafe","StrafeR2",doStrafeRWM);
+    f.add_transition ("Strafe","Strafe","StrafeL2",doStrafeRWM);
 
     f.add_transition ("Kick","Ready","Wait",doWait);
     f.add_transition ("Kick","End","Stop",Stop);
