@@ -7,6 +7,8 @@ from naoqi import ALProxy
 import math
 import argparse
 import almath
+import numpy as np
+import cv2
 from numpy.random import randint
 pygame.init()
 pygame.display.set_mode((100, 100))
@@ -59,7 +61,45 @@ motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
 
 voicePxy.say("Bonjour")
 
-# Partie pour Déterminer la Position du Robot
+### Partie pour obtenir une vue du robot
+
+# proxy naoqi
+videoDevice = ALProxy('ALVideoDevice', robotIP, robotPort)
+
+# subscribe top camera
+AL_kTopCamera = 0       #camera du haut
+AL_kQVGA = 1            # pour une image à 320*240px
+AL_kBGRColorSpace = 13  #code pour obtenir rgb
+captureDevice = videoDevice.subscribeCamera("test", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
+
+def getImage(): #cf doc aldebaran pour un affichage en live
+    
+    width = 320
+    height = 240
+    image = np.zeros((height, width, 3), np.uint8)
+
+    result = videoDevice.getImageRemote(captureDevice)
+
+    if result == None:
+        print('cannot capture')
+    elif result[6] == None:
+        print('no image data string')
+    else:
+        # translate value to mat
+        values = map(ord, list(result[6]))
+        i = 0
+        for y in range(0, height):
+            for x in range(0, width):
+                image.itemset((y, x, 0), values[i + 0])
+                image.itemset((y, x, 1), values[i + 1])
+                image.itemset((y, x, 2), values[i + 2])
+                i += 3
+
+        # show image
+        cv2.imshow("pepper-top-camera-320x240", image)
+
+
+### Partie pour Déterminer la Position du Robot
 try:
     import pylab as pyl
     PLOT_ALLOW = True
@@ -702,6 +742,7 @@ if __name__== "__main__":
     run = True   
     while (run):
         State = f.curState
+        getImage()
         funct = f.run () # function to be executed in the new state
         if f.curState != end_state:
             newEvent = funct() # new event when state action is finished
