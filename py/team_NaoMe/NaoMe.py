@@ -5,6 +5,8 @@ import sys
 import motion
 from naoqi import ALProxy
 import math
+import argparse
+import almath
 from numpy.random import randint
 pygame.init()
 pygame.display.set_mode((100, 100))
@@ -55,6 +57,67 @@ motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]])
 
 
 voicePxy.say("Bonjour")
+
+# Partie pour Déterminer la Position du Robot
+try:
+    import pylab as pyl
+    PLOT_ALLOW = True
+except ImportError:
+    print "Matplotlib not found. this example will not plot data"
+    PLOT_ALLOW = False
+ 
+# get robotPosition and nextRobotPosition
+    useSensors = False
+    robotPosition     = almath.Pose2D(motionProxy.getRobotPosition(useSensors))
+    nextRobotPosition = almath.Pose2D(motionProxy.getNextRobotPosition())
+ 
+# here we wait until the move process is over
+    motionProxy.waitUntilMoveIsFinished()
+    # then we get the final robot position
+    robotPositionFinal = almath.Pose2D(motionProxy.getRobotPosition(False))
+
+    # compute robot Move with the second call of move API
+    # so between nextRobotPosition and robotPositionFinal
+    robotMove = almath.pose2DInverse(nextRobotPosition)*robotPositionFinal
+    print ("Robot Move:", robotMove)
+
+    # Go to rest position
+    motionProxy.rest()
+
+    # end compute, begin plot
+
+    if PLOT_ALLOW:
+        #################
+        # Plot the data #
+        #################
+        pyl.figure()
+        printRobotPosition(robotPosition, 'black')
+        printRobotPosition(nextRobotPosition, 'blue')
+        printFootSteps(footSteps1, 'green', 'red')
+
+        pyl.figure()
+        printRobotPosition(robotPosition, 'black')
+        printRobotPosition(nextRobotPosition, 'blue')
+        printFootSteps(footSteps2, 'blue', 'orange')
+
+        pyl.show()
+
+        # end plot
+
+def printRobotPosition(pos, color):
+    """ Function for plotting a robot position
+        :param pos: an almath Pose2D
+        :param color: the color of the robot
+    """
+
+    robotWidth = 0.01
+    pyl.plot(pos.x, pos.y, color=color, marker='o', markersize=10)
+    pyl.plot([pos.x, pos.x + robotWidth*math.cos(pos.theta)],
+             [pos.y, pos.y + robotWidth*math.sin(pos.theta)],
+             color=color,
+             linewidth = 4)
+
+
 
 # Definition des distances pour avancer ou tourner
 
