@@ -701,6 +701,7 @@ if __name__== "__main__":
     run = True   
     while (run):
         State = f.curState
+        getImage()
         funct = f.run () # function to be executed in the new state
         if f.curState != end_state:
             newEvent = funct() # new event when state action is finished
