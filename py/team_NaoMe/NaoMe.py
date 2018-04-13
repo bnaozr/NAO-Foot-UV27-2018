@@ -5,9 +5,11 @@ import sys
 import motion
 from naoqi import ALProxy
 import math
+from numpy.random import randint
 pygame.init()
 pygame.display.set_mode((100, 100))
 
+DD = randint(0,2)
 robotIp = "localhost"
 robotPort = 11212
 
@@ -15,10 +17,6 @@ if (len(sys.argv) >= 2):
     robotIp = sys.argv[1]
 if (len(sys.argv) >= 3):
     robotPort = int(sys.argv[2])
-
-print(robotIp)
-print(robotPort)
-
 
 try:
     motionProxy = ALProxy("ALMotion", robotIp, robotPort)
@@ -90,14 +88,11 @@ def doRun():
     motionProxy.setWalkTargetVelocity(x, y, 0, frequency)
     print(">>>>>> action : run for 1 s")   # do some work
     sonarProxy.subscribe("myApplication")
-    time.sleep(0.25)
-    a = (memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value") < 1 )
-    b = (memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value") < 1 )
-    time.sleep(0.75)
+    time.sleep(0.2)
     newKey,c = getKey(); # check if key pressed
     event = "Go"
-    print(a,b)
-    if newKey and not a and not b:
+    if obstacle() : event = "Obstacle"
+    else :
         if c==pygame.K_w:
             event="Wait"
         if c==pygame.K_r:
@@ -108,26 +103,12 @@ def doRun():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-    elif a:
-        while a:
-            motionProxy.setWalkTargetVelocity(0, y, theta1, frequency)
-            sonarProxy.subscribe("myApplication")
-            time.sleep(0.25)
-            a = (memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value") < 1 )
-            time.sleep(0.75)
-    else:
-        while b:
-            motionProxy.setWalkTargetVelocity(0, y, theta2, frequency)
-            sonarProxy.subscribe("myApplication")
-            time.sleep(0.25)
-            b = (memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value") < 1 )
-            time.sleep(0.75)
     return event
 
 def TurnRight():
     motionProxy.setWalkTargetVelocity(0, y, theta1, frequency)
     print(">>>>>> action : rotation a droite pendant 1 s") 
-    time.sleep(1.0)
+    time.sleep(0.2)
     newKey,c = getKey(); # check if key pressed
     event = "TurnR"
     if newKey:
@@ -144,7 +125,7 @@ def TurnRight():
 def TurnLeft():
     motionProxy.setWalkTargetVelocity(0, y, theta2, frequency)
     print(">>>>>> action : rotation a gauche pendant 1 s") 
-    time.sleep(1.0)
+    time.sleep(0.2)
     newKey,c = getKey(); # check if key pressed
     event = "TurnL"
     if newKey:
@@ -160,7 +141,7 @@ def TurnLeft():
 
 def doWait():
     motionProxy.stopMove()
-    time.sleep(1.0)
+    time.sleep(0.2)
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
@@ -182,7 +163,7 @@ def doCrouch():
     postureProxy.goToPosture("Crouch", 0.3)
     motionProxy.setStiffnesses("Body", 0.0)
     print(">>>>>> action : sleep d'1 s")
-    time.sleep(1.0)
+    time.sleep(0.2)
     newKey,c = getKey(); # check if key pressed
     event = "Bed"
     if newKey:
@@ -196,7 +177,7 @@ def dofonctionne():
     postureProxy.goToPosture("StandInit", 0.5)
     motionProxy.setWalkArmsEnabled(True, True)
     print(">>>>>> action :Pret") 
-    time.sleep(1.0)
+    time.sleep(0.2)
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
@@ -213,6 +194,58 @@ def dofonctionne():
         if c==pygame.K_l:
             event="TurnL"
     return event
+
+def doAvoid():
+    X = 0.2
+    global DD
+    k = DD
+    if k == 0 :
+        Theta = -0.2
+        Y = -0.5
+    else:
+        Theta = 0.2
+        Y = 0.5
+    DD = k
+    Frequency = 1.0
+    motionProxy.setWalkTargetVelocity(X, Y, Theta, Frequency)
+    time.sleep(0.2)
+    newKey,c = getKey()
+    event = "Nothing"
+    if obstacle() : event = "Obstacle"
+    else :
+        if c==pygame.K_w:
+            event="Wait"
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+        if c==pygame.K_b:
+            event="Bed"
+        if c==pygame.K_l:
+            event="TurnL"
+    return event
+
+def obstacle():
+    global DD
+    # Get sonar left first echo (distance in meters to the first obstacle).
+    le = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
+    # Same thing for right.
+    re = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+        # Get sonar left first echo (distance in meters to the first obstacle).
+    time.sleep(0.1)
+    le1 = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
+    # Same thing for right.
+    re1 = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+    seuil = 0.5
+    if (re<seuil and re1<seuil) or (le<seuil and le1<seuil) or (le<seuil and re1<seuil) or (le1<seuil and re<seuil):
+        if re1 < le1 : DD = 1
+        else : DD = 0
+        return True
+    else:
+        return False
+
 
 def Stop():
     motionProxy.stopMove()
@@ -285,6 +318,8 @@ if __name__== "__main__":
     f.add_state ("End")
     f.add_state ("AvanceRapide")
     f.add_state ("Recule")
+    f.add_state ("Avoid")
+
 
     # defines the events 
     f.add_event ("Wait")
@@ -296,7 +331,7 @@ if __name__== "__main__":
     f.add_event ("Bed")
     f.add_event ("Gofast")
     f.add_event ("MovingBackward")
-    
+    f.add_event ("Obstacle")
    
     # defines the transition matrix
     # current state, next state, event, action in next state
@@ -324,7 +359,7 @@ if __name__== "__main__":
     f.add_transition ("Deplacement","End","Stop",Stop);
     f.add_transition ("Deplacement","AvanceRapide","Gofast",doFast);
     f.add_transition ("Deplacement","Recule","MovingBackward",doRecule);
-    
+    f.add_transition ("Deplacement","Avoid","Obstacle",doAvoid)
     f.add_transition ("Idle","Ready","Fonctionne",dofonctionne);
     f.add_transition ("Idle","End","Stop",Stop);
     f.add_transition ("Idle","Idle","Bed",doCrouch);
@@ -344,6 +379,13 @@ if __name__== "__main__":
     f.add_transition ("Recule","Deplacement","Go",doRun);
     f.add_transition ("Recule","AvanceRapide","Gofast",doFast);
     f.add_transition ("Recule","End","Stop",Stop);
+    f.add_transition ("Avoid","Avoid","Obstacle",doAvoid)
+    f.add_transition("Avoid","Deplacement","Nothing",doRun)
+    f.add_transition("Avoid","Idle","Bed",doCrouch)
+    f.add_transition("Avoid","Ready","Wait",doWait)
+    f.add_transition ("Avoid","Rotation","TurnL",TurnLeft);
+    f.add_transition ("Avoid","Rotation","TurnR",TurnRight);
+    f.add_transition ("Avoid","End","Stop",Stop);
     
     # initial state
     f.set_state ("Idle") # ... replace with your initial state
