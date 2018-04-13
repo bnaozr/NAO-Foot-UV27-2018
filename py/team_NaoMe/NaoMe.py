@@ -166,6 +166,8 @@ def doRun():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_z:
+            event = "Gofast"
     return event
 
 def TurnRight():
@@ -183,6 +185,10 @@ def TurnRight():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_z:
+            event = "Gofast"
+        if c==pygame.K_d:
+            event = "MovingBackward"
     return event
 
 def TurnLeft():
@@ -200,6 +206,10 @@ def TurnLeft():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
+        if c==pygame.K_z:
+            event = "Gofast"
+        if c==pygame.K_d:
+            event = "MovingBackward"
     return event
 
 def doWait():
@@ -220,6 +230,10 @@ def doWait():
             event="Fonctionne"
         if c==pygame.K_b:
             event="Bed"
+        if c==pygame.K_z:
+            event = "Gofast"
+        if c==pygame.K_d:
+            event = "MovingBackward"
     return event
 
 def doCrouch():
@@ -256,6 +270,8 @@ def dofonctionne():
             event="Bed"
         if c==pygame.K_l:
             event="TurnL"
+        if c==pygame.K_d:
+            event = "MovingBackward"
     return event
 
 def doAvoid():
@@ -322,7 +338,7 @@ def doFast():
     print(">>>>>> action : Avance Rapide pendant 1 s")
     time.sleep(1.0)
     newKey,c = getKey();
-    event = "AvanceRapide"
+    event = "Gofast"
     if newKey:
         if c==pygame.K_r:
             event="TurnR"
@@ -332,44 +348,35 @@ def doFast():
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_f:
-            event="Fonctionne"
+        if c==pygame.K_w:
+            event="Wait"
         if c==pygame.K_b:
             event="Bed"
         if c==pygame.K_z:
-            event="AvanceRapide"
-        if c==pygame.K_s:
-            event="Recule"
+            event = "Gofast"
     return event
 
 
-    def doRecule():
+def doRecule():
     motionProxy.setWalkTargetVelocity(-1.0, 0, 0, 0.1)
     print(">>>>>> action : Recule pendant 1 s")
     time.sleep(1.0)
     newKey,c = getKey();
-    event = "Recule"
+    event = "MovingBackward"
     if newKey:
         if c==pygame.K_r:
             event="TurnR"
         if c==pygame.K_l:
             event="TurnL"
-        if c==pygame.K_g:
-            event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_f:
-            event="Fonctionne"
+        if c==pygame.K_w:
+            event="Wait"
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_z:
-            event="AvanceRapide"
-        if c==pygame.K_s:
-            event="Recule"
+        if c==pygame.K_d:
+            event = "MovingBackward"
     return event
-
-    
-    
 
 if __name__== "__main__":
     
@@ -421,7 +428,6 @@ if __name__== "__main__":
     f.add_transition ("Deplacement","Rotation","TurnR",TurnRight);
     f.add_transition ("Deplacement","End","Stop",Stop);
     f.add_transition ("Deplacement","AvanceRapide","Gofast",doFast);
-    f.add_transition ("Deplacement","Recule","MovingBackward",doRecule);
     f.add_transition ("Deplacement","Avoid","Obstacle",doAvoid)
     f.add_transition ("Idle","Ready","Fonctionne",dofonctionne);
     f.add_transition ("Idle","End","Stop",Stop);
@@ -432,15 +438,12 @@ if __name__== "__main__":
     f.add_transition ("AvanceRapide","Rotation","TurnR",TurnRight);
     f.add_transition ("AvanceRapide","Rotation","TurnL",TurnLeft);
     f.add_transition ("AvanceRapide","Deplacement","Go",doRun);
-    f.add_transition ("AvanceRapide","Recule","MovingBackward",doRecule);
     f.add_transition ("AvanceRapide","End","Stop",Stop);
     
     f.add_transition ("Recule","Recule","MovingBackward",doRecule);
     f.add_transition ("Recule","Ready","Wait",doWait);
     f.add_transition ("Recule","Rotation","TurnR",TurnRight);
     f.add_transition ("Recule","Rotation","TurnL",TurnLeft);
-    f.add_transition ("Recule","Deplacement","Go",doRun);
-    f.add_transition ("Recule","AvanceRapide","Gofast",doFast);
     f.add_transition ("Recule","End","Stop",Stop);
     f.add_transition ("Avoid","Avoid","Obstacle",doAvoid)
     f.add_transition("Avoid","Deplacement","Nothing",doRun)
