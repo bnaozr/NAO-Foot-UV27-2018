@@ -14,6 +14,7 @@ pygame.display.set_mode((100, 100))
 DD = randint(0,2)
 robotIp = "localhost"
 robotPort = 11212
+State = ""
 
 if (len(sys.argv) >= 2):
     robotIp = sys.argv[1]
@@ -143,11 +144,12 @@ def getKey():
         if event.type == pygame.KEYDOWN:
             c=event.key
             cok=True
-    print(pygame.K_w,c)
+    print(pygame.K_SPACE,c)
     return cok,c
 
 
 def doRun():
+    if State == "AvanceRapide" or state == "Recule" : motionProxy.stopMove()
     motionProxy.setWalkTargetVelocity(x, y, 0, frequency)
     print(">>>>>> action : run for 1 s")   # do some work
     sonarProxy.subscribe("myApplication")
@@ -156,18 +158,20 @@ def doRun():
     event = "Go"
     if obstacle() : event = "Obstacle"
     else :
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_z:
+        if c==pygame.K_qSHIFT:
             event = "Gofast"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
     return event
 
 def TurnRight():
@@ -177,17 +181,17 @@ def TurnRight():
     newKey,c = getKey(); # check if key pressed
     event = "TurnR"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_z:
+        if c==pygame.K_qSHIFT:
             event = "Gofast"
-        if c==pygame.K_d:
+        if c==pygame.K_DOWN:
             event = "MovingBackward"
     return event
 
@@ -198,17 +202,17 @@ def TurnLeft():
     newKey,c = getKey(); # check if key pressed
     event = "TurnL"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_z:
+        if c==pygame.K_qSHIFT:
             event = "Gofast"
-        if c==pygame.K_d:
+        if c==pygame.K_DOWN:
             event = "MovingBackward"
     return event
 
@@ -218,21 +222,21 @@ def doWait():
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_f:
+        if c==pygame.K_SPACE:
             event="Fonctionne"
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_z:
+        if c==pygame.K_qSHIFT:
             event = "Gofast"
-        if c==pygame.K_d:
+        if c==pygame.K_DOWN:
             event = "MovingBackward"
     return event
 
@@ -246,7 +250,7 @@ def doCrouch():
     if newKey:
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_f:
+        if c==pygame.K_SPACE:
             event="Fonctionne"
     return event
 
@@ -258,19 +262,19 @@ def dofonctionne():
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_d:
+        if c==pygame.K_DOWN:
             event = "MovingBackward"
     return event
 
@@ -292,17 +296,17 @@ def doAvoid():
     event = "Nothing"
     if obstacle() : event = "Obstacle"
     else :
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
     return event
 
@@ -334,47 +338,50 @@ def Stop():
     return "Stop"
 
 def doFast():
-    motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.7)
+    motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.3)
     print(">>>>>> action : Avance Rapide pendant 1 s")
     time.sleep(1.0)
     newKey,c = getKey();
     event = "Gofast"
     if newKey:
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
-        if c==pygame.K_g:
+        if c==pygame.K_UP:
             event="Go"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_z:
+        if c==pygame.K_qSHIFT:
             event = "Gofast"
+        if c==pygame.K_DOWN:
+            event = "MovingBackward"
     return event
 
 
 def doRecule():
+    if State != "Recule" and State != "Ready" : motionProxy.stopMove()
     motionProxy.setWalkTargetVelocity(-1.0, 0, 0, 0.1)
     print(">>>>>> action : Recule pendant 1 s")
     time.sleep(1.0)
     newKey,c = getKey();
     event = "MovingBackward"
     if newKey:
-        if c==pygame.K_r:
+        if c==pygame.K_d:
             event="TurnR"
-        if c==pygame.K_l:
+        if c==pygame.K_q:
             event="TurnL"
         if c==pygame.K_s:
             event="Stop"
-        if c==pygame.K_w:
+        if c==pygame.K_SPACE:
             event="Wait"
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_d:
+        if c==pygame.K_DOWN:
             event = "MovingBackward"
     return event
 
@@ -429,6 +436,8 @@ if __name__== "__main__":
     f.add_transition ("Deplacement","End","Stop",Stop);
     f.add_transition ("Deplacement","AvanceRapide","Gofast",doFast);
     f.add_transition ("Deplacement","Avoid","Obstacle",doAvoid)
+    f.add_transition ("Deplacement","Recule","MovingBackward",doRecule)
+
     f.add_transition ("Idle","Ready","Fonctionne",dofonctionne);
     f.add_transition ("Idle","End","Stop",Stop);
     f.add_transition ("Idle","Idle","Bed",doCrouch);
@@ -439,12 +448,15 @@ if __name__== "__main__":
     f.add_transition ("AvanceRapide","Rotation","TurnL",TurnLeft);
     f.add_transition ("AvanceRapide","Deplacement","Go",doRun);
     f.add_transition ("AvanceRapide","End","Stop",Stop);
+    f.add_transition ("AvanceRapide","Recule","MovingBackward",doRecule)
     
     f.add_transition ("Recule","Recule","MovingBackward",doRecule);
     f.add_transition ("Recule","Ready","Wait",doWait);
+    f.add_transition ("Recule","Deplacement","Go",doRun);
     f.add_transition ("Recule","Rotation","TurnR",TurnRight);
     f.add_transition ("Recule","Rotation","TurnL",TurnLeft);
     f.add_transition ("Recule","End","Stop",Stop);
+
     f.add_transition ("Avoid","Avoid","Obstacle",doAvoid)
     f.add_transition("Avoid","Deplacement","Nothing",doRun)
     f.add_transition("Avoid","Idle","Bed",doCrouch)
@@ -464,6 +476,7 @@ if __name__== "__main__":
     # fsm loop
     run = True   
     while (run):
+        State = f.curState
         funct = f.run () # function to be executed in the new state
         if f.curState != end_state:
             newEvent = funct() # new event when state action is finished
