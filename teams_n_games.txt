@@ -16,9 +16,9 @@ Equipe 2 : IGN
 Pseudo :  team_ImGettingNothing
 Membres : Corentin J., Erwann L, Simon Q., Alexandre C., Matthieu B., Jonathan G., Félix L.B., Nathan F., Louis L., Philibert A.
 
-Equipe 3 :
-Pseudo :  team_
-Membres : 
+Equipe 3 : 
+Pseudo :  team_FC-NA0
+Membres : Kévin B., Aurélien G., Mehdi A., Audrey D., Guillaume LB., Eloïse N., Vincent L.,  Axel P., Elia.C, Alexandre A.
 
 Equipe 4 :
 Pseudo :  team_
@@ -29,9 +29,9 @@ Pseudo :  team_NaoMe
 Membres : Riwan C., Caine S., Marine D., Pierre L., Jean-Baptiste M., Gwendal B., Ange V., Etienne M.
 
 Equipe 6 :
-Pseudo :  team_
-Membres : 
-git log
+Pseudo : team_Rocket 
+Membres : Ducasse Q., Chazelas V. , Nelson W., Florian G.
+
 ------------------------------------------------------
 Challenge
 
