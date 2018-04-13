@@ -252,6 +252,86 @@ def doWait():
             event = "MovingBackward"
     return event
 
+def doStrafeLWM():
+    motionProxy.stopMove()
+    motionProxy.setWalkTargetVelocity(0, 1, 0, frequency)
+    print(">>>>>> action : strafe left for 1 s")   # do some work
+    newKey,c = getKey(); # check if key pressed
+    event = "StrafeL"
+    if newKey:
+        if c==pygame.K_w:
+            event="Wait"
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+    return event
+
+
+def doStrafeRWM():
+    motionProxy.stopMove()
+    motionProxy.setWalkTargetVelocity(0, -1, 0, frequency)
+    print(">>>>>> action : strafe right for 1 s")   # do some work
+    newKey,c = getKey(); # check if key pressed
+    event = "StrafeR"
+    if newKey:
+        if c==pygame.K_w:
+            event="Wait"
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+    return event
+
+def doStrafeLWS():
+    motionProxy.setWalkTargetVelocity(0, 1, 0, frequency)
+    print(">>>>>> action : strafe left for 1 s")   # do some work
+    newKey,c = getKey(); # check if key pressed
+    event = "StrafeL"
+    if newKey:
+        if c==pygame.K_w:
+            event="Wait"
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+    return event
+
+def doStarfeRWS():
+    motionProxy.setWalkTargetVelocity(0, -1, 0, frequency)
+    print(">>>>>> action : strafe right for 1 s")   # do some work
+    sonarProxy.subscribe("myApplication")
+    time.sleep(0.25)
+    a = (memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value") < 1 )
+    b = (memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value") < 1 )
+    time.sleep(0.75)
+    newKey,c = getKey(); # check if key pressed
+    event = "StrafeR"
+    if newKey:
+        if c==pygame.K_w:
+            event="Wait"
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+    return event
+
 def doCrouch():
     postureProxy.goToPosture("Crouch", 0.3)
     motionProxy.setStiffnesses("Body", 0.0)
@@ -471,6 +551,7 @@ if __name__== "__main__":
     f.add_state ("Ready")
     f.add_state ("Deplacement")
     f.add_state ("Rotation")
+    f.add_state ("Strafe")
     f.add_state ("End")
     f.add_state ("Kick")
     f.add_state ("AvanceRapide")
@@ -483,6 +564,8 @@ if __name__== "__main__":
     f.add_event ("Go")
     f.add_event ("TurnR")
     f.add_event ("TurnL")
+    f.add_event ("StrafeR")
+    f.add_event ("StrafeL")
     f.add_event ("Stop")
     f.add_event ("Fonctionne")
     f.add_event ("Bed")
@@ -529,7 +612,18 @@ if __name__== "__main__":
     f.add_transition ("Idle","Ready","Fonctionne",dofonctionne);
     f.add_transition ("Idle","End","Stop",Stop);
     f.add_transition ("Idle","Idle","Bed",doCrouch);
-    
+    f.add_transition ("Deplacement","Strafe","StrafeR",doStrafeRWM)
+    f.add_transition ("Deplacement","Strafe","StrafeL",doStrafeLWM)
+    f.add_transition ("Ready","Strafe","StrafeR",doStrafeRWS)
+    f.add_transition ("Ready","Strafe","StrafeL",doStrafeLWS)
+
+    f.add_transition ("Strafe","Strafe","StrafeR",doStrafeRWS);
+    f.add_transition ("Strafe","Strafe","StrafeR",doStrafeRWS);
+    f.add_transition ("Strafe","Ready","Wait",doWait);
+    f.add_transition ("Strafe","Rotation","TurnL",TurnLeft);
+    f.add_transition ("Strafe","Rotation","TurnR",TurnRight);
+    f.add_transition ("Strafe","End","Stop",Stop);
+
     f.add_transition ("Kick","Ready","Wait",doWait);
     f.add_transition ("Kick","End","Stop",Stop);
     f.add_transition ("AvanceRapide","Ready","Wait",doWait);
@@ -554,7 +648,7 @@ if __name__== "__main__":
     f.add_transition ("Avoid","Rotation","TurnL",TurnLeft);
     f.add_transition ("Avoid","Rotation","TurnR",TurnRight);
     f.add_transition ("Avoid","End","Stop",Stop);
-    
+
     # initial state
     f.set_state ("Idle") # ... replace with your initial state
     # first event
