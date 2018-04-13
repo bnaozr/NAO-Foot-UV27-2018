@@ -225,6 +225,53 @@ def doFast():
     motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.7)
     print(">>>>>> action : Avance Rapide pendant 1 s")
     time.sleep(1.0)
+    newKey,c = getKey();
+    event = "AvanceRapide"
+    if newKey:
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+        if c==pygame.K_f:
+            event="Fonctionne"
+        if c==pygame.K_b:
+            event="Bed"
+        if c==pygame.K_z:
+            event="AvanceRapide"
+        if c==pygame.K_s:
+            event="Recule"
+    return event
+
+
+    def doRecule():
+    motionProxy.setWalkTargetVelocity(-1.0, 0, 0, 0.1)
+    print(">>>>>> action : Recule pendant 1 s")
+    time.sleep(1.0)
+    newKey,c = getKey();
+    event = "Recule"
+    if newKey:
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+        if c==pygame.K_f:
+            event="Fonctionne"
+        if c==pygame.K_b:
+            event="Bed"
+        if c==pygame.K_z:
+            event="AvanceRapide"
+        if c==pygame.K_s:
+            event="Recule"
+    return event
+
     
     
 
