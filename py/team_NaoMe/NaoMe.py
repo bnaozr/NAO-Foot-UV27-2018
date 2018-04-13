@@ -254,6 +254,60 @@ def Stop():
     print(">>>>>> Fin du programme") 
     return "Stop"
 
+def doFast():
+    motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.7)
+    print(">>>>>> action : Avance Rapide pendant 1 s")
+    time.sleep(1.0)
+    newKey,c = getKey();
+    event = "AvanceRapide"
+    if newKey:
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+        if c==pygame.K_f:
+            event="Fonctionne"
+        if c==pygame.K_b:
+            event="Bed"
+        if c==pygame.K_z:
+            event="AvanceRapide"
+        if c==pygame.K_s:
+            event="Recule"
+    return event
+
+
+    def doRecule():
+    motionProxy.setWalkTargetVelocity(-1.0, 0, 0, 0.1)
+    print(">>>>>> action : Recule pendant 1 s")
+    time.sleep(1.0)
+    newKey,c = getKey();
+    event = "Recule"
+    if newKey:
+        if c==pygame.K_r:
+            event="TurnR"
+        if c==pygame.K_l:
+            event="TurnL"
+        if c==pygame.K_g:
+            event="Go"
+        if c==pygame.K_s:
+            event="Stop"
+        if c==pygame.K_f:
+            event="Fonctionne"
+        if c==pygame.K_b:
+            event="Bed"
+        if c==pygame.K_z:
+            event="AvanceRapide"
+        if c==pygame.K_s:
+            event="Recule"
+    return event
+
+    
+    
+
 if __name__== "__main__":
     
     # define the states
@@ -262,7 +316,10 @@ if __name__== "__main__":
     f.add_state ("Deplacement")
     f.add_state ("Rotation")
     f.add_state ("End")
+    f.add_state ("AvanceRapide")
+    f.add_state ("Recule")
     f.add_state ("Avoid")
+
 
     # defines the events 
     f.add_event ("Wait")
@@ -272,6 +329,8 @@ if __name__== "__main__":
     f.add_event ("Stop")
     f.add_event ("Fonctionne")
     f.add_event ("Bed")
+    f.add_event ("Gofast")
+    f.add_event ("MovingBackward")
     f.add_event ("Obstacle")
    
     # defines the transition matrix
@@ -282,24 +341,44 @@ if __name__== "__main__":
     f.add_transition ("Ready","Rotation","TurnL",TurnLeft);
     f.add_transition ("Ready","End","Stop",Stop);
     f.add_transition ("Ready","Idle","Bed",doCrouch);
+    f.add_transition ("Ready","AvanceRapide","Gofast",doFast);
+    f.add_transition ("Ready","Recule","MovingBackward",doRecule);
     
     f.add_transition ("Rotation","Ready","Wait",doWait);
     f.add_transition ("Rotation","Rotation","TurnR",TurnRight);
     f.add_transition ("Rotation","Rotation","TurnL",TurnLeft);
     f.add_transition ("Rotation","End","Stop",Stop);
     f.add_transition ("Rotation","Deplacement","Go",doRun);
+    f.add_transition ("Rotation","AvanceRapide","Gofast",doFast);
+    f.add_transition ("Rotation","Recule","MovingBackward",doRecule);
     
     f.add_transition ("Deplacement","Deplacement","Go",doRun);
     f.add_transition ("Deplacement","Ready","Wait",doWait);
     f.add_transition ("Deplacement","Rotation","TurnL",TurnLeft);
     f.add_transition ("Deplacement","Rotation","TurnR",TurnRight);
     f.add_transition ("Deplacement","End","Stop",Stop);
+    f.add_transition ("Deplacement","AvanceRapide","Gofast",doFast);
+    f.add_transition ("Deplacement","Recule","MovingBackward",doRecule);
     f.add_transition ("Deplacement","Avoid","Obstacle",doAvoid)
-    
     f.add_transition ("Idle","Ready","Fonctionne",dofonctionne);
     f.add_transition ("Idle","End","Stop",Stop);
     f.add_transition ("Idle","Idle","Bed",doCrouch);
     
+    f.add_transition ("AvanceRapide","Ready","Wait",doWait);
+    f.add_transition ("AvanceRapide","AvanceRapide","Gofast",doFast);
+    f.add_transition ("AvanceRapide","Rotation","TurnR",TurnRight);
+    f.add_transition ("AvanceRapide","Rotation","TurnL",TurnLeft);
+    f.add_transition ("AvanceRapide","Deplacement","Go",doRun);
+    f.add_transition ("AvanceRapide","Recule","MovingBackward",doRecule);
+    f.add_transition ("AvanceRapide","End","Stop",Stop);
+    
+    f.add_transition ("Recule","Recule","MovingBackward",doRecule);
+    f.add_transition ("Recule","Ready","Wait",doWait);
+    f.add_transition ("Recule","Rotation","TurnR",TurnRight);
+    f.add_transition ("Recule","Rotation","TurnL",TurnLeft);
+    f.add_transition ("Recule","Deplacement","Go",doRun);
+    f.add_transition ("Recule","AvanceRapide","Gofast",doFast);
+    f.add_transition ("Recule","End","Stop",Stop);
     f.add_transition ("Avoid","Avoid","Obstacle",doAvoid)
     f.add_transition("Avoid","Deplacement","Nothing",doRun)
     f.add_transition("Avoid","Idle","Bed",doCrouch)
