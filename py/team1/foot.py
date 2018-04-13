@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import argparse
+import numpy as np
 import pygame as pg
 import time
 
@@ -49,8 +50,12 @@ def main():
     machine = Machine(model=nao, states=states, transitions=transitions,
                       initial='idle', ignore_invalid_triggers=True)
 
+    xref, yref, _ = nao.get_pos()
+    scale = 50
+    l = 640
+    h = 480
     pg.init()
-    window = pg.display.set_mode((640, 480))
+    window = pg.display.set_mode((l, h))
 
     run = True
     while run:
@@ -81,7 +86,18 @@ def main():
             run = False
         if nao.state == 'walking':
             nao.avoid_obstacle()
-        time.sleep(0.1)
+
+        x, y, theta = nao.get_pos()
+        x = int((x-xref)*scale)+l/2 
+        y = -int((y-yref)*scale)+h/2
+        window.fill((0,255,0))
+        pg.draw.circle(window, (0,0,255), (x,y), 6)
+
+        pg.display.flip()
+        pg.time.delay(100)
+
+    pg.quit()
+    exit()
 
 
 if __name__ == '__main__':

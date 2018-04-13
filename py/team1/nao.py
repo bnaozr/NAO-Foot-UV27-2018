@@ -29,6 +29,9 @@ class Nao:
     def crouch(self):
         self.motion.rest()
 
+    def get_pos(self):
+        return self.motion.getRobotPosition(True)
+
     def on_right_detected(self, **args):
         pass
 
