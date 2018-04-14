@@ -30,14 +30,19 @@ f = fsm.fsm()
 move_flag = False
 
 #Touches:
-t_avance="q"
-t_pivot_r="r"
-t_pivot_l="l"
-t_wait="w"
-t_r="d"
-t_l="a"
-t_b="b"
-t_end="s"
+
+
+fichier=open('doc_texte_touches','r')
+touches=fichier.readlines()[0].split(',')
+fichier.close()
+t_avance=touches[0]
+t_pivot_r=touches[5]
+t_pivot_l=touches[4]
+t_wait=touches[6]
+t_r=touches[3]
+t_l=touches[2]
+t_b=touches[1]
+t_end=touches[7][0]
 
 
 def avance():
@@ -221,7 +226,7 @@ def goRight():
         if val==t_b:
             move_flag=False
             event="Go back"
-   if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
+    if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
     lastevent="Right"   
@@ -265,7 +270,7 @@ def goBack():
     global move_flag,lastevent
     if not(move_flag):
         move_flag=True
-        naocmd.decal_gauche(motion,posture,1)    
+        naocmd.marche_arriere(motion,posture,1)    
         print "Recule"   
     time.sleep(0.5)
     newKey,val = getKey(); 
@@ -344,7 +349,7 @@ if __name__== "__main__":
     f.add_transition ("Gauche","Tourne a gauche","Turn on the Left",left)
     f.add_transition ("Gauche","Tourne a droite","Turn on the Right",right)
     f.add_transition ("Gauche","Idle","Wait",doWait)
-    f.add_transition ("Droite","Droite","Right",goRight)
+    f.add_transition ("Gauche","Droite","Right",goRight)
     f.add_transition ("Gauche","Evitement","Obstacle",evitement)
     f.add_transition ("Gauche","Arriere","Go back",goBack)
 
