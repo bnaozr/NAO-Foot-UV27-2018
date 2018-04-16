@@ -141,7 +141,7 @@ class Nao:
         # StiffnessOn(proxy)
 
         # Send NAO to Pose Init
-        self.postureProxy.goToPosture("StandInit", 0.5)
+        self.posture.goToPosture("StandInit", 0.5)
 
         # Activate Whole Body Balancer
         isEnabled = True
@@ -213,7 +213,7 @@ class Nao:
         self.motion.wbEnable(isEnabled)
 
         # send robot to Pose Init
-        self.postureProxy.goToPosture("StandInit", 0.5)
+        self.posture.goToPosture("StandInit", 0.5)
 
     def doWakeUp(self):
         self.motion.wakeUp()

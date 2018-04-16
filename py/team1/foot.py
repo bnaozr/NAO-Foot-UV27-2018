@@ -21,8 +21,8 @@ def main():
 
     # FSM
     states = ['idle', 'end', 'leftward', 'rightward', 'rest',
-              'forward', 'backward','shooting','shouting',
-              'lateralShuffelLeftward','lateralShuffelRightward']
+              'forward', 'backward', 'shooting', 'shouting',
+              'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
 
 
     machine = Machine(model=nao, states=states, transitions=[],
@@ -34,48 +34,48 @@ def main():
     sourceIdle = ['idle', 'leftward', 'rightward', 'rest', 'forward',
                   'backward', 'rest', 'joyMove', 
                   'lateralShuffelLeftward', 'lateralShuffelRightward']
-    machine.add_transition(trigger='sleep', sourceIdle, dest='idle',
+    machine.add_transition(trigger='sleep', source=sourceIdle, dest='idle',
                            before='doSleep')
     # Destination end
     sourceEnd = ['idle', 'end', 'leftward', 'rightward','rest', 'forward',
                  'backward', 'joyMove', 'lateralShuffelLeftward',
                  'lateralShuffelRightward']
-    machine.add_transition(trigger='quit', sourceEnd, dest='end', 
+    machine.add_transition(trigger='quit', source=sourceEnd, dest='end', 
                            before='doQuit')
     # Destination 'leftward'
     sourceLeftward = ['leftward', 'rest', 'rightward', 'forward', 'backward',
             'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
-    machine.add_transition(trigger='left', sourceLeftward, dest='leftward',
+    machine.add_transition(trigger='left', source=sourceLeftward, dest='leftward',
                            before='doLeft')
     # Destination 'rightward'
     sourceRightward = ['leftward', 'rightward', 'rest', 'forward', 'backward',
             'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
-    machine.add_transition(trigger='right', sourceRightward, dest='rightward',
+    machine.add_transition(trigger='right', source=sourceRightward, dest='rightward',
                            before='doRight')
     # Destination 'rest'
     sourceRest=['idle', 'leftward', 'rightward', 'rest', 'forward', 'backward',
                'shooting','shouting', 'lateralShuffelLeftward',
                'lateralShuffelRightward', 'joyMove']
-    machine.add_transition(trigger='standby', sourceRest, dest='rest',
+    machine.add_transition(trigger='standby', source=sourceRest, dest='rest',
                            before='doStandby')
     # Destination 'forward'
     sourceForward = ['leftward', 'rightward', 'rest', 'forward', 'backward',
             'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
-    machine.add_transition(trigger='go', sourceForward, dest='forward',
+    machine.add_transition(trigger='go', source=sourceForward, dest='forward',
                            before='doGo')
     # Destination backward
     sourceBackward = ['leftward', 'rightward', 'rest', 'forward', 'backward',
             'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
-    machine.add_transition(trigger='goback', sourceBackward, dest='backward',
+    machine.add_transition(trigger='goback', source=sourceBackward, dest='backward',
                            before='doGoback')
     # Destination 'shooting'
     sourceShooting = ['leftward', 'rightward', 'rest', 'forward', 'backward',
             'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
-    machine.add_transition(trigger='shoot',  sourceShooting, dest='shooting',
+    machine.add_transition(trigger='shoot', source=sourceShooting, dest='shooting',
                            before='doShoot')
     # Destination 'shouting'
     sourceShouting = ['rest']
-    machine.add_transition(trigger='shout',  sourceShouting, dest='shouting',
+    machine.add_transition(trigger='shout', source=sourceShouting, dest='shouting',
                            before='doShout')
     # Destination 'lateralShuffelLeftward'
     sourceLateralShuffelLeftward = ['leftward', 'rightward', 'rest',
@@ -83,7 +83,7 @@ def main():
                                     'lateralShuffelLeftward',
                                     'lateralShuffelRightward']
     machine.add_transition(trigger='lateralShuffelLeft',
-                           sourceLateralShuffelLeftward,
+                           source=sourceLateralShuffelLeftward,
                            dest='lateralShuffelLeftward',
                            before='doLateralShuffelLeft')
     # Destination 'lateralShuffelRightward'
@@ -92,7 +92,7 @@ def main():
                                      'lateralShuffelLeftward',
                                      'lateralShuffelRightward', 'joyMove']
     machine.add_transition(trigger='lateralShuffelRight',
-                           sourceLateralShuffelRightward ,
+                           source=sourceLateralShuffelRightward ,
                            dest='lateralShuffelRightward',
                            before='doLateralShuffelRight')
 
@@ -100,7 +100,7 @@ def main():
     sourceJoystick = ['backward', 'foreward', 'joyMove',
                       'lateralShuffelLeftward', 'lateralShuffelRightward',
                       'leftward', 'rest', 'rightward']
-    machine.add_transition('joystick', sourceJoystick, 'joyMove',
+    machine.add_transition(trigger='joystick', source=sourceJoystick, dest='joyMove',
                            before='doJoyMove')
 
     # IHM
