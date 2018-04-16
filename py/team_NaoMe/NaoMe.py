@@ -537,13 +537,13 @@ axisMask     = 63
 space        = motion.FRAME_ROBOT
 dx      = 0.05                 
 dz      = 0.05                 
-dwy     = 5.0*math.pi/180.0
+dwy     = 20.0*math.pi/180.0
 times   = [2.0, 2.7, 4.5]
 isAbsolute = False
 targetList = [
-[-dx, 0.0, dz, 0.0, +dwy, 0.0],
-[+dx, 0.0, dz, 0.0, 0.0, 0.0],
-[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+      [-2*dx, 0.0, 2*dz, 0.0, +dwy, 0.0],
+      [+2*dx, 0.0, dz, 0.0, 0.0, 0.0],
+      [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
 
 def KickOn():
     motionProxy.stopMove()
