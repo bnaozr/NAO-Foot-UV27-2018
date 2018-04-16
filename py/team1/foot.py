@@ -20,7 +20,7 @@ def main():
     nao = Nao(args.ip, args.port)
 
     # FSM
-    states = ['idle', 'end', 'leftward', 'rightward', 'rest',
+    states = ['idle', 'end', 'joyMove', 'leftward', 'rightward', 'rest',
               'forward', 'backward','shooting']
 
     transitions = [#état de départ idle
@@ -129,10 +129,11 @@ def main():
 			#et laisse la main au joueur
 		  {'trigger': 'standby', 'source': 'shooting', 'dest': 'rest',
                 'before': 'doStandby'}]
-			
 
     machine = Machine(model=nao, states=states, transitions=transitions,
                       initial='idle', ignore_invalid_triggers=True)
+
+    machine.add_transition('joystick', ['backward', 'foreward', 'joyMove', 'leftward', 'rest', 'rightward'], 'joyMove', before='doJoyMove')
 
     xref, yref, _ = nao.get_pos()
     scale = 50
@@ -142,10 +143,42 @@ def main():
     window = pg.display.set_mode((l, h))
 
     detect_obstacle = True
+    
+    pg.joystick.init()
+    jTolerance = 0.2
+    
+    for i in range(pg.joystick.get_count()):
+        pg.joystick.Joystick(i).init()
 
     run = True
     while run:
         for event in pg.event.get():
+            if event.type == JOYAXISMOTION:
+                if event.axis == 0:
+                    if abs(event.value) < jTolerance:
+                        nao.set_y_speed(0)
+                    else:
+                        nao.set_y_speed(event.value)
+                    nao.joystick()
+
+                if event.axis == 1:
+                    if abs(event.value) < jTolerance:
+                        nao.set_x_speed(0)
+                    else:
+                        nao.set_x_speed(-event.value)
+                    nao.joystick()
+
+                if event.axis == 2:
+                    if abs(event.value) < jTolerance:
+                        nao.set_rotation_speed(0)
+                    else:
+                        nao.set_rotation_speed(-event.value)
+                    nao.joystick()
+
+            if event.type == JOYBUTTONDOWN:
+                if event.button == 0:
+                    nao.shoot()
+
             if event.type == KEYDOWN:
                 if event.key == K_DOWN:
                     nao.goback()
@@ -172,7 +205,7 @@ def main():
                     nao.sleep()
 
                 elif event.key == K_o:
-                    detect_obstacle = !detect_obstacle
+                    detect_obstacle = not detect_obstacle
 
         if nao.state == 'end':
             run = False

@@ -15,6 +15,13 @@ class Nao:
         self.sonar.subscribe('nao')
         self.tts = ALProxy("ALTextToSpeech", ip, int(port))
 
+	self.maxXSpeed = 0.2
+        self.maxYSpeed = 0.2
+	self.maxRotationSpeed = 0.4
+        self.xSpeed = 0
+	self.ySpeed = 0
+	self.rotationSpeed = 0
+
         self.motion.wakeUp()
 
     def avoid_obstacle(self):
@@ -28,7 +35,20 @@ class Nao:
 
     def get_pos(self):
         return self.motion.getRobotPosition(True)
-	
+
+    # commandes au joystick
+    def set_rotation_speed(self, rotationSpeed):
+        self.rotationSpeed = rotationSpeed*self.maxRotationSpeed
+
+    def set_x_speed(self, xSpeed):
+        self.xSpeed = xSpeed*self.maxXSpeed
+
+    def set_y_speed(self, ySpeed):
+        self.ySpeed = ySpeed*self.maxYSpeed
+
+    def doJoyMove(self):
+        self.motion.move(self.xSpeed, self.ySpeed, self.rotationSpeed)
+
 	  #fonction de transitions en doNomévénement
 
     def doQuit(self):
@@ -39,22 +59,22 @@ class Nao:
         self.motion.move(0, 0, -0.2)
 
     def doLeft(self):
-		    self.motion.move(0, 0, 0.2)
+        self.motion.move(0, 0, 0.2)
 		
     def doSleep(self):
-		    self.motion.rest()
+        self.motion.rest()
 
     def doStandby(self):
-		    self.motion.stopMove()
+        self.motion.stopMove()
 		
     def doGo(self):
-		    self.motion.move(0.1, 0, 0)
+        self.motion.move(0.1, 0, 0)
 	
     def doGoback(self):
-		    self.motion.move(-0.1, 0, 0)
-	
+        self.motion.move(-0.1, 0, 0)
+
     def doShoot(self):
-		    self.motion.stopMove()
+        self.motion.stopMove()
 
     def doWakeUp(self):
         self.motion.wakeUp()
