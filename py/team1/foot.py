@@ -215,8 +215,8 @@ def main():
             nao.avoid_obstacle()
 
         x, y, theta = nao.get_pos()
-        x = int((x-xref)*scale)+l/2
-        y = -int((y-yref)*scale)+h/2
+        x = int((x-xref)*scale)+window_width/2
+        y = -int((y-yref)*scale)+window_height/2
         window.fill((0, 255, 0))
         pg.draw.circle(window, (0, 0, 255), (x, y), 6)
 

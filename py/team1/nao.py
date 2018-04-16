@@ -76,50 +76,6 @@ class Nao:
 
     def doShoot(self):
         self.motion.stopMove()
-
-    def doWakeUp(self):
-        self.motion.wakeUp()
-
-    def walk_back(self):
-        self.motion.move(-0.1, 0, 0)
-
-    def sidestepR(self):
-        footStepsList = []
-        footStepsList.append([["RLeg"], [[0.00, -0.16, 0.0]]])
-        footStepsList.append([["LLeg"], [[0.00, 0.1, 0.0]]])
-        stepFrequency = 0.8
-        clearExisting = False
-        for i in range(len(footStepsList)):
-            self.motion.setFootStepsWithSpeed(
-                footStepsList[i][0],
-                footStepsList[i][1],
-                [stepFrequency],
-                clearExisting)
-
-    def sidestepL(self):
-        footStepsList = []
-        footStepsList.append([["LLeg"], [[0.00, 0.16, 0.0]]])
-        footStepsList.append([["RLeg"], [[0.00, -0.1, 0.0]]])
-        stepFrequency = 0.8
-        clearExisting = False
-        for i in range(len(footStepsList)):
-            self.motion.setFootStepsWithSpeed(
-                footStepsList[i][0],
-                footStepsList[i][1],
-                [stepFrequency],
-                clearExisting)
-
-    def insulte(self):
-        L = ["Ma grand-mère joue mieux que toi",
-             "Ba alors, casse toi pauvre con", "Allez Paris",
-             "Vous n'avez pas honte?", "Ba alors, on attend pas Patrick?",
-             "Je suis pas chasseur mais je lui mettrai bien une cartouche",
-             "Poulet braisé mamène", "Benoit Zère rappeur du finistère",
-             "Benoit Zère mon dieu", "Votez Troliste", "Send Nudes"]
-        a = np.random.randint(0, len(L))
-        self.tts.say(L[a])
-
-    def shoot(self):
         # Set NAO in Stiffness On
         # StiffnessOn(proxy)
 
@@ -197,3 +153,45 @@ class Nao:
 
         # send robot to Pose Init
         self.postureProxy.goToPosture("StandInit", 0.5)
+
+    def doWakeUp(self):
+        self.motion.wakeUp()
+
+    def walk_back(self):
+        self.motion.move(-0.1, 0, 0)
+
+    def sidestepR(self):
+        footStepsList = []
+        footStepsList.append([["RLeg"], [[0.00, -0.16, 0.0]]])
+        footStepsList.append([["LLeg"], [[0.00, 0.1, 0.0]]])
+        stepFrequency = 0.8
+        clearExisting = False
+        for i in range(len(footStepsList)):
+            self.motion.setFootStepsWithSpeed(
+                footStepsList[i][0],
+                footStepsList[i][1],
+                [stepFrequency],
+                clearExisting)
+
+    def sidestepL(self):
+        footStepsList = []
+        footStepsList.append([["LLeg"], [[0.00, 0.16, 0.0]]])
+        footStepsList.append([["RLeg"], [[0.00, -0.1, 0.0]]])
+        stepFrequency = 0.8
+        clearExisting = False
+        for i in range(len(footStepsList)):
+            self.motion.setFootStepsWithSpeed(
+                footStepsList[i][0],
+                footStepsList[i][1],
+                [stepFrequency],
+                clearExisting)
+
+    def insulte(self):
+        L = ["Ma grand-mère joue mieux que toi",
+             "Ba alors, casse toi pauvre con", "Allez Paris",
+             "Vous n'avez pas honte?", "Ba alors, on attend pas Patrick?",
+             "Je suis pas chasseur mais je lui mettrai bien une cartouche",
+             "Poulet braisé mamène", "Benoit Zère rappeur du finistère",
+             "Benoit Zère mon dieu", "Votez Troliste", "Send Nudes"]
+        a = np.random.randint(0, len(L))
+        self.tts.say(L[a])
