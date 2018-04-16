@@ -92,26 +92,37 @@ def go():
         motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
         event="PressG" # define the default event
         key_pressed = pygame.key.get_pressed()
-
         transitionState = None
         if key_pressed[pygame.K_w]:
             motionProxy.stopMove()
             event="PressW"
-        if key_pressed[pygame.K_s]:
+        if key_pressed[pygame.K_p]:
             motionProxy.stopMove()
             event="PressS" 
-        if key_pressed[pygame.K_r]:
+        if key_pressed[pygame.K_d]:
             motionProxy.stopMove()
             event = "PressW"
             transitionState = "PressR"
-        if key_pressed[pygame.K_l]:
+        if key_pressed[pygame.K_q]:
             motionProxy.stopMove()
             event = "PressW"
             transitionState = "PressL"
-        if key_pressed[pygame.K_e]:
+        if key_pressed[pygame.K_m]:
             motionProxy.stopMove()
             event = "PressS"
             transitionState = "PressE"
+        if key_pressed[pygame.K_s]:
+            motionProxy.stopMove()
+            event = "PressW"
+            transitionState = "PressB"
+        if key_pressed[pygame.K_a]:
+            motionProxy.stopMove()
+            event = "PressW"
+            transitionState = "PressLG"
+        if key_pressed[pygame.K_e]:
+            motionProxy.stopMove()
+            event = "PressW"
+            transitionState = "PressRG"
             
     return event # return event to be able to define the transition
 
@@ -124,14 +135,20 @@ def wakeUp():
     motionProxy.setMotionConfig([["ENABLE_FOOT_CONTACT_PROTECTION", True]]) # depuis naocmd
     event="PressW" # define the default event
     key_pressed = pygame.key.get_pressed()
-    if key_pressed[pygame.K_g]:
+    if key_pressed[pygame.K_z]:
         event="PressG"  
-    if key_pressed[pygame.K_s]:
+    if key_pressed[pygame.K_p]:
         event="PressS" 
-    if key_pressed[pygame.K_l]:
+    if key_pressed[pygame.K_q]:
         event="PressL" 
-    if key_pressed[pygame.K_r]:
-        event="PressR" 
+    if key_pressed[pygame.K_d]:
+        event="PressR"
+    if key_pressed[pygame.K_s]:
+        event="PressB"
+    if key_pressed[pygame.K_a]:
+        event = "PressLG"
+    if key_pressed[pygame.K_e]:
+        event = "PressRG"
         
     return event
 
@@ -142,26 +159,46 @@ def stand():
     
     if transitionState == None:
         key_pressed = pygame.key.get_pressed()
-        if key_pressed[pygame.K_g]:
-            time.sleep(1.0)
+        if key_pressed[pygame.K_z]:
             event="PressG"  
-        if key_pressed[pygame.K_s]:
-            time.sleep(1.0)
+        if key_pressed[pygame.K_p]:
             event="PressS" 
-        if key_pressed[pygame.K_l]:
-            time.sleep(1.0)
+        if key_pressed[pygame.K_q]:
             event="PressL" 
-        if key_pressed[pygame.K_r]:
-            time.sleep(1.0)
+        if key_pressed[pygame.K_d]:
             event="PressR"
+        if key_pressed[pygame.K_s]:
+            event="PressB"
+        if key_pressed[pygame.K_m]:
+            event="PressS"
+            transitionState = "PressE"
+        if key_pressed[pygame.K_a]:
+            event = "PressLG"
+        if key_pressed[pygame.K_e]:
+            event = "PressRG"
+            transitionState = "PressRG"
     elif transitionState == "PressG":
+        time.sleep(1.0)
         event = "PressG"
     elif transitionState == "PressL":
+        time.sleep(1.0)
         event = "PressL"
     elif transitionState == "PressR":
+        time.sleep(1.0)
         event = "PressR"
     elif transitionState == "PressE":
+        time.sleep(1.0)
         event = "PressE"
+    elif transitionState == "PressB":
+        time.sleep(1.0)
+        event = "PressB"
+    elif transitionState == "PressLG":
+        time.sleep(1.0)
+        event = "PressLG"
+    elif transitionState == "PressRG":
+        time.sleep(1.0)
+        event = "PressRG"
+        
     return event
 
 def turnLeft():
@@ -175,24 +212,36 @@ def turnLeft():
     event="PressL" # define the default event
     key_pressed = pygame.key.get_pressed()
     transitionState = None
-    if key_pressed[pygame.K_s]:
+    if key_pressed[pygame.K_p]:
         motionProxy.stopMove()
         event="PressS"
     if key_pressed[pygame.K_w]:
         motionProxy.stopMove()
         event="PressW"
-    if key_pressed[pygame.K_r]:
+    if key_pressed[pygame.K_d]:
         motionProxy.stopMove()
         event = "PressW"
         transitionState = "PressR"
-    if key_pressed[pygame.K_g]:
+    if key_pressed[pygame.K_z]:
         motionProxy.stopMove()
         event = "PressW"
         transitionState = "PressG"
-    if key_pressed[pygame.K_e]:
+    if key_pressed[pygame.K_m]:
         motionProxy.stopMove()
         event = "PressS"
         transitionState = "PressE"
+    if key_pressed[pygame.K_s]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressB"
+    if key_pressed[pygame.K_a]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressLG"
+    if key_pressed[pygame.K_e]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressRG"
 
     return event
 
@@ -206,24 +255,37 @@ def turnRight():
     motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
     event="PressR" # define the default event
     key_pressed = pygame.key.get_pressed()
-    if key_pressed[pygame.K_s]:
+    transitionState = None
+    if key_pressed[pygame.K_p]:
         motionProxy.stopMove()
         event="PressS"
     if key_pressed[pygame.K_w]:
         motionProxy.stopMove()
         event="PressW"
-    if key_pressed[pygame.K_l]:
+    if key_pressed[pygame.K_q]:
         motionProxy.stopMove()
         event = "PressW"
         transitionState = "PressL"
-    if key_pressed[pygame.K_g]:
+    if key_pressed[pygame.K_z]:
         motionProxy.stopMove()
         event = "PressW"
         transitionState = "PressG"
-    if key_pressed[pygame.K_e]:
+    if key_pressed[pygame.K_m]:
         motionProxy.stopMove()
         event = "PressS"
         transitionState = "PressE"
+    if key_pressed[pygame.K_s]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressB"
+    if key_pressed[pygame.K_a]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressLG"
+    if key_pressed[pygame.K_e]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressRG"
         
     return event
 
@@ -234,14 +296,14 @@ def sleep():
     event="PressS" # define the default event
     key_pressed = pygame.key.get_pressed()
     if transitionState == None:
-        if key_pressed[pygame.K_s]:
+        if key_pressed[pygame.K_p]:
             event="PressS"
         if key_pressed[pygame.K_w]:
             event="PressW"
-        if key_pressed[pygame.K_e]:
-            event="End"
+        if key_pressed[pygame.K_m]:
+            event="PressE"
     elif transitionState == "PressE":
-        event = "End"
+        event = "PressE"
 
         
     return event
@@ -255,29 +317,160 @@ def evitement():
     sonarProxy.subscribe("SonarApp")
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+    print valL, valR
     sonarProxy.unsubscribe("SonarApp")
     x  = 0.1
     y  = 0.0
     frequency=0.75
-    while valR<valL or valL<valR:
-        if valR<valL:
-            theta  = math.pi/4.0 
-            motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
-            sonarProxy.subscribe("SonarApp")
-            valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
-            valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
-            sonarProxy.unsubscribe("SonarApp")
-        elif valL <valR:
-            theta  =-math.pi/4.0 
-            motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
-            sonarProxy.subscribe("SonarApp")
-            valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
-            sonarProxy.unsubscribe("SonarApp")
-    motionProxy.stopMove()
-    event="FinObstacle"
+    event = "Obstacle"
+    key_pressed = pygame.key.get_pressed()
+    if valR>100*valL or valL>100*valR and valL > 0.3 and valR > 0.3:
+        event = "FinObstacle"
+    elif valR<valL:
+        theta  = math.pi/4.0 
+        motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+    elif valL <valR:
+        theta  =-math.pi/4.0 
+        motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+    if key_pressed[pygame.K_w]:
+        motionProxy.stopMove()
+        event = "PressW"
+
 
     return event
 
+def back():
+    print ">>>>>> action : backward"
+    global transitionState
+    x  = -1.0
+    y  = 0.0
+    theta = 0.0
+    frequency  = 0.75
+    motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+    event="PressB" # define the default event
+    key_pressed = pygame.key.get_pressed()
+    transitionState = None
+    if key_pressed[pygame.K_p]:
+        motionProxy.stopMove()
+        event="PressS"
+    if key_pressed[pygame.K_w]:
+        motionProxy.stopMove()
+        event="PressW"
+    if key_pressed[pygame.K_d]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressR"
+    if key_pressed[pygame.K_z]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressG"
+    if key_pressed[pygame.K_m]:
+        motionProxy.stopMove()
+        event = "PressS"
+        transitionState = "PressE"
+    if key_pressed[pygame.K_q]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressL"
+    if key_pressed[pygame.K_a]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressLG"
+    if key_pressed[pygame.K_e]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressRG"
+        
+    return event
+
+def goLeft():
+    print ">>>>>> action : go and turn"
+    global transitionState
+    x  = 1.0
+    y  = 0.0
+    theta = math.pi/4
+    frequency  = 0.75
+    motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+    event="PressLG" # define the default event
+    key_pressed = pygame.key.get_pressed()
+    transitionState = None
+    if key_pressed[pygame.K_p]:
+        motionProxy.stopMove()
+        event="PressS"
+    if key_pressed[pygame.K_w]:
+        motionProxy.stopMove()
+        event="PressW"
+    if key_pressed[pygame.K_d]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressR"
+    if key_pressed[pygame.K_z]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressG"
+    if key_pressed[pygame.K_m]:
+        motionProxy.stopMove()
+        event = "PressS"
+        transitionState = "PressE"
+    if key_pressed[pygame.K_q]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressL"
+    if key_pressed[pygame.K_s]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressB"
+    if key_pressed[pygame.K_e]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressRG"
+        
+    return event
+    
+def goRight():
+    print ">>>>>> action : go and turn"
+    global transitionState
+    x  = 1.0
+    y  = 0.0
+    theta = -math.pi/4.0
+    frequency  = 0.75
+    motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
+    event="PressRG" # define the default event
+    key_pressed = pygame.key.get_pressed()
+    transitionState = None
+    if key_pressed[pygame.K_p]:
+        motionProxy.stopMove()
+        event="PressS"
+    if key_pressed[pygame.K_w]:
+        motionProxy.stopMove()
+        event="PressW"
+    if key_pressed[pygame.K_d]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressR"
+    if key_pressed[pygame.K_z]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressG"
+    if key_pressed[pygame.K_m]:
+        motionProxy.stopMove()
+        event = "PressS"
+        transitionState = "PressE"
+    if key_pressed[pygame.K_q]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressL"
+    if key_pressed[pygame.K_s]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressB"
+    if key_pressed[pygame.K_a]:
+        motionProxy.stopMove()
+        event = "PressW"
+        transitionState = "PressLG"
+        
+    return event
+        
 # define here all the other functions (actions) of the fsm 
 # ...
 
@@ -291,6 +484,9 @@ if __name__== "__main__":
     f.add_state ("TournerGauche")
     f.add_state ("End")
     f.add_state ("Evitement")
+    f.add_state ("Reculer")
+    f.add_state ("AvancerGauche")
+    f.add_state ("AvancerDroite")
 
     # defines the events 
     f.add_event("PressG") # example
@@ -299,7 +495,11 @@ if __name__== "__main__":
     f.add_event("PressW")
     f.add_event("PressS")
     f.add_event("PressE")
+    f.add_event("PressB")
     f.add_event("Obstacle")
+    f.add_event("FinObstacle")
+    f.add_event("PressLG")
+    f.add_event("PressRG")
    
    
     # defines the transition matrix
@@ -312,24 +512,65 @@ if __name__== "__main__":
     f.add_transition ("Pret","TournerGauche","PressL",turnLeft)
     f.add_transition ("Pret","Avancer","PressG",go)
     f.add_transition ("Pret","Pret","PressW",stand)
+    f.add_transition ("Pret","Reculer","PressB",back)
+    f.add_transition ("Pret","AvancerGauche","PressLG",goLeft)
+    f.add_transition ("Pret","AvancerDroite","PressRG",goRight)
     f.add_transition ("TournerDroite","Pret","PressW",stand)
     f.add_transition ("TournerDroite","Veille","PressS",sleep)
     f.add_transition ("TournerDroite","TournerDroite","PressR",turnRight)
     f.add_transition ("TournerDroite","TournerGauche","PressL",turnLeft)
     f.add_transition ("TournerDroite","Avancer","PressG",go)
+    f.add_transition ("TournerDroite","Reculer","PressB",back)
+    f.add_transition ("TournerDroite","AvancerGauche","PressLG",goLeft)
+    f.add_transition ("TournerDroite","AvancerDroite","PressRG",goRight)
     f.add_transition ("TournerGauche","Veille","PressS",sleep)
     f.add_transition ("TournerGauche","Pret","PressW",stand)
     f.add_transition ("TournerGauche","TournerGauche","PressL",turnLeft)
     f.add_transition ("TournerGauche","TournerDroite","PressR",turnRight)
     f.add_transition ("TournerGauche","Avancer","PressG",go)
+    f.add_transition ("TournerGauche","Reculer","PressB",back)
+    f.add_transition ("TournerGauche","AvancerGauche","PressLG",goLeft)
+    f.add_transition ("TournerGauche","AvancerDroite","PressRG",goRight)
     f.add_transition ("Avancer","Pret","PressW",stand)
     f.add_transition ("Avancer","Veille","PressS",sleep)
     f.add_transition ("Avancer","Avancer","PressG",go)
     f.add_transition ("Avancer","Evitement","Obstacle",evitement)
     f.add_transition ("Avancer","TournerGauche","PressL",turnLeft)
     f.add_transition ("Avancer","TournerDroite","PressR",turnRight)
+    f.add_transition ("Avancer","Reculer","PressB",back)
+    f.add_transition ("Avancer","AvancerGauche","PressLG",goLeft)
+    f.add_transition ("Avancer","AvancerDroite","PressRG",goRight)
     f.add_transition ("Evitement","Avancer","FinObstacle",go)
-    
+    f.add_transition ("Evitement","Evitement","Obstacle",evitement)
+    f.add_transition ("Evitement","Pret","PressW",stand)
+    f.add_transition ("Reculer","Reculer","PressB",back)
+    f.add_transition ("Reculer","Avancer","PressG",go)
+    f.add_transition ("Reculer","TournerGauche","PressL",turnLeft)
+    f.add_transition ("Reculer","TournerDroite","PressR",turnRight)
+    f.add_transition ("Reculer","Veille","PressS",sleep)
+    f.add_transition ("Reculer","Pret","PressW",stand)
+    f.add_transition ("Reculer","AvancerGauche","PressLG",goLeft)
+    f.add_transition ("Reculer","AvancerDroite","PressRG",goRight)
+    f.add_transition ("AvancerGauche","AvancerGauche","PressLG",goLeft)
+    f.add_transition ("AvancerGauche","Avancer","PressG",go)
+    f.add_transition ("AvancerGauche","TournerGauche","pressL",turnLeft)
+    f.add_transition ("AvancerGauche","TournerDroite","pressR",turnRight)
+    f.add_transition ("AvancerGauche","Reculer","PressB",back)
+    f.add_transition ("AvancerGauche","Pret","PressW",stand)
+    f.add_transition ("AvancerGauche","Veille","PressS",sleep)
+    f.add_transition ("AvancerGauche","Evitement","Obstacle",evitement)
+    f.add_transition ("AvancerGauche","AvancerDroite","PressRG",goRight)
+    f.add_transition ("AvancerDroite","AvancerDroite","PressRG",goRight)
+    f.add_transition ("AvancerDroite","Avancer","PressG",go)
+    f.add_transition ("AvancerDroite","TournerGauche","pressL",turnLeft)
+    f.add_transition ("AvancerDroite","TournerDroite","pressR",turnRight)
+    f.add_transition ("AvancerDroite","Reculer","PressB",back)
+    f.add_transition ("AvancerDroite","Pret","PressW",stand)
+    f.add_transition ("AvancerDroite","Veille","PressS",sleep)
+    f.add_transition ("AvancerDroite","Evitement","Obstacle",evitement)
+    f.add_transition ("AvancerDroite","AvancerGauche","PressLG",goLeft)
+
+
 
     # initial state
     f.set_state ("Veille") # ... replace with your initial state
