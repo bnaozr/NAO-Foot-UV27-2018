@@ -256,30 +256,25 @@ def evitement():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    if valR<valL:
-        while valR<=0.30:
-            x  = 0.1
-            y  = 0.0
+    x  = 0.1
+    y  = 0.0
+    frequency=0.75
+    while valR<valL or valL<valR:
+        if valR<valL:
             theta  = math.pi/4.0 
-            frequency=0.75
             motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
             sonarProxy.subscribe("SonarApp")
             valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+            valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
             sonarProxy.unsubscribe("SonarApp")
-        motionProxy.stopMove()
-        event="FinObstacle"
-    else:  
-        while valL<=0.30:
-            x  = 0.1
-            y  = 0.0
+        elif valL <valR:
             theta  =-math.pi/4.0 
-            frequency=0.75
             motionProxy.setWalkTargetVelocity(x, y, theta, frequency)
             sonarProxy.subscribe("SonarApp")
-            valL = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
+            valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
             sonarProxy.unsubscribe("SonarApp")
-        motionProxy.stopMove()
-        event="FinObstacle"
+    motionProxy.stopMove()
+    event="FinObstacle"
 
     return event
 
@@ -358,6 +353,4 @@ if __name__== "__main__":
             funct()
             run = False
             
-    print "End of the programm"
-
-
+print "End of the programm"
