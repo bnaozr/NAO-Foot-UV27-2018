@@ -1,8 +1,12 @@
+#Deamon pour lire les touches ?
+#Manette Play ? https://gist.github.com/claymcleod/028386b860b75e4f5472
+
 import fsm
 import time
 import sys
 import naocmd
 import select 
+import pygame as pg
 
 
 Mouvement=1
@@ -149,6 +153,8 @@ try:
         AX1=Notrejoystick.get_axis(1)
         AX2=Notrejoystick.get_axis(2)
 except: ()
+
+
 f = fsm.fsm()
 move_flag = False
 
@@ -166,18 +172,20 @@ t_r=touches[3]
 t_l=touches[2]
 t_b=touches[1]
 t_end=touches[7][0]
-t_tir="t"
 
 
 def avance():
     global move_flag,lastevent
     if not(move_flag):
         move_flag=True
-        naocmd.tout_droit(motion,posture,1)
-        print "Avance d'un pas"  
+        naocmd.tout_droit(motion,posture,1,x,y)
+        print"Avance d'un pas"
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    
+    newKey,val = getMouv();
+    
     event="Again" # define the default event
+    
     if newKey:
         if val==t_pivot_l:
             move_flag=False
@@ -197,10 +205,6 @@ def avance():
         if val==t_b:
             move_flag=False
             event="Go back"
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"
-            
     if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
@@ -214,7 +218,7 @@ def left():
         naocmd.tourner_a_gauche(motion,1)
         print "Tourne a gauche"   
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    newKey,val = getMouv(); 
     event="Again" # define the default event
     if newKey:
         if val==t_avance:
@@ -235,9 +239,6 @@ def left():
         if val==t_b:
             move_flag=False
             event="Go back"
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"            
     if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
@@ -251,7 +252,7 @@ def right():
         naocmd.tourner_a_droite(motion,1)    
         print "Tourne a droite"   
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    newKey,val = getMouv(); 
     event="Again" # define the default event
     if newKey:
         if val==t_avance:
@@ -272,9 +273,6 @@ def right():
         if val==t_b:
             move_flag=False
             event="Go back"
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"
     if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
@@ -288,7 +286,7 @@ def doWait():
         naocmd.stop(motion)
         print "En Pause"   
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    newKey,val = getMouv(); 
     event="Again" # define the default event
     if newKey:
         if val==t_avance:
@@ -311,10 +309,7 @@ def doWait():
             event="Left"
         if val==t_b:
             move_flag=False
-            event="Go back" 
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"
+            event="Go back"    
     return event # return event to be able to define the transition
 
 def evitement():
@@ -342,7 +337,7 @@ def goRight():
         naocmd.decal_droite(motion,posture,1)    
         print "A droite"   
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    newKey,val = getMouv(); 
     event="Again" # define the default event
     if newKey:
         if val==t_avance:
@@ -363,9 +358,6 @@ def goRight():
         if val==t_b:
             move_flag=False
             event="Go back"
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"
     if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
@@ -379,7 +371,7 @@ def goLeft():
         naocmd.decal_gauche(motion,posture,1)    
         print "A gauche"   
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    newKey,val = getMouv(); 
     event="Again" # define the default event
     if newKey:
         if val==t_avance:
@@ -400,9 +392,6 @@ def goLeft():
         if val==t_b:
             move_flag=False
             event="Go back"
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"
     if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
@@ -416,7 +405,7 @@ def goBack():
         naocmd.marche_arriere(motion,posture,1)    
         print "Recule"   
     time.sleep(0.5)
-    newKey,val = getKey(); 
+    newKey,val = getMouv(); 
     event="Again" # define the default event
     if newKey:
         if val==t_avance:
@@ -437,48 +426,12 @@ def goBack():
         if val==t_l:
             move_flag=False
             event="Left"
-        if val==t_tir:
-            move_flag=False
-            event="Move foot"
     if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
         move_flag=False
         event="Obstacle"
     lastevent="Go back"   
     return event # return event to be able to define the transition
 
-def move_foot():
-    global move_flag,lastevent
-    if not(move_flag):
-        move_flag=True
-        naocmd.tir(motion,posture,1)    
-        print("tir")   
-    time.sleep(0.5)
-    newKey,val = getKey(); 
-    event="Again" # define the default event
-    if newKey:
-        if val==t_avance:
-            move_flag=False
-            event="Walk"
-        if val==t_pivot_l:
-            move_flag=False
-            event="Turn on the Left"
-        if val==t_pivot_r:
-            move_flag=False
-            event="Turn on the Right"       
-        if val==t_wait:
-            move_flag=False
-            event="Wait"
-        if val==t_r:
-            move_flag=False
-            event="Right"
-        if val==t_l:
-            move_flag=False
-            event="Left"
-    if naocmd.donnee_sonar(sonar,memory,motion,float(dist))[0]:
-        move_flag=False
-        event="Obstacle"
-    lastevent="Move foot"   
-    return event # return event to be able to define the transition    
     
 
 def end():
@@ -500,7 +453,6 @@ if __name__== "__main__":
     f.add_state ("Gauche")
     f.add_state ("Arriere")
     f.add_state ("Evitement")
-    f.add_state ("Tirer du droit")
 
     f.add_event ("Walk")
     f.add_event ("Turn on the Right")
@@ -512,7 +464,7 @@ if __name__== "__main__":
     f.add_event ("Wait")
     f.add_event ("Again")
     f.add_event ("Obstacle")
-    f.add_event ("Move foot")
+
 
 
     f.add_transition ("Droite","Avance","Walk",avance)
@@ -523,7 +475,6 @@ if __name__== "__main__":
     f.add_transition ("Droite","Idle","Wait",doWait)
     f.add_transition ("Droite","Evitement","Obstacle",evitement)
     f.add_transition ("Droite","Arriere","Go back",goBack)
-    f.add_transition ("Droite","Tirer du foot","Move foot", move_foot)
 
     f.add_transition ("Gauche","Avance","Walk",avance)
     f.add_transition ("Gauche","Gauche","Again",goLeft)
@@ -533,8 +484,7 @@ if __name__== "__main__":
     f.add_transition ("Gauche","Droite","Right",goRight)
     f.add_transition ("Gauche","Evitement","Obstacle",evitement)
     f.add_transition ("Gauche","Arriere","Go back",goBack)
-    f.add_transition ("Gauche","Tirer du foot","Move foot", move_foot)
-    
+
     f.add_transition ("Arriere","Avance","Walk",avance)
     f.add_transition ("Arriere","Arriere","Again",goBack)
     f.add_transition ("Arriere","Tourne a gauche","Turn on the Left",left)
@@ -543,7 +493,6 @@ if __name__== "__main__":
     f.add_transition ("Arriere","Droite","Right",goRight)
     f.add_transition ("Arriere","Gauche","Left",goLeft)
     f.add_transition ("Arriere","Evitement","Obstacle",evitement)
-    f.add_transition ("Arriere","Tirer du foot","Move foot", move_foot)
     
     f.add_transition ("Avance","Droite","Right",goRight)
     f.add_transition ("Avance","Gauche","Left",goLeft)
@@ -553,7 +502,6 @@ if __name__== "__main__":
     f.add_transition ("Avance","Tourne a gauche","Turn on the Left",left)
     f.add_transition ("Avance","Tourne a droite","Turn on the Right",right)
     f.add_transition ("Avance","Idle","Wait",doWait)
-    f.add_transition ("Avance","Tirer du foot","Move foot", move_foot)
 
     f.add_transition ("Idle","Avance","Walk",avance)
     f.add_transition ("Idle","Mission terminee","End",end)
@@ -563,7 +511,6 @@ if __name__== "__main__":
     f.add_transition ("Idle","Droite","Right",goRight)
     f.add_transition ("Idle","Gauche","Left",goLeft)
     f.add_transition ("Idle","Arriere","Go back",goBack)
-    f.add_transition ("Idle","Tirer du foot","Move foot", move_foot)
 
     f.add_transition ("Tourne a gauche","Evitement","Obstacle",evitement)
     f.add_transition ("Tourne a gauche","Tourne a gauche","Again",left)
@@ -573,7 +520,6 @@ if __name__== "__main__":
     f.add_transition ("Tourne a gauche","Droite","Right",goRight)
     f.add_transition ("Tourne a gauche","Gauche","Left",goLeft)
     f.add_transition ("Tourne a gauche","Arriere","Go back",goBack)
-    f.add_transition ("Tourne a gauche","Tirer du foot","Move foot", move_foot)
 
     f.add_transition ("Tourne a droite","Avance","Walk",avance)
     f.add_transition ("Tourne a droite","Tourne a gauche","Turn on the Left",left)
@@ -583,7 +529,6 @@ if __name__== "__main__":
     f.add_transition ("Tourne a droite","Droite","Right",goRight)
     f.add_transition ("Tourne a droite","Gauche","Left",goLeft)
     f.add_transition ("Tourne a droite","Arriere","Go back",goBack)
-    f.add_transition ("Tourne a droite","Tirer du foot","Move foot", move_foot)
 
     f.add_transition ("Evitement","Evitement","Again",evitement)
     f.add_transition ("Evitement","Avance","Walk",avance)
@@ -593,18 +538,13 @@ if __name__== "__main__":
     f.add_transition ("Evitement","Tourne a gauche","Turn on the Left",left)
     f.add_transition ("Evitement","Tourne a droite","Turn on the Right",right)
     f.add_transition ("Evitement","Arriere","Go back",goBack)
-    f.add_transition ("Evitement","Tirer du foot","Move foot", move_foot)
-    
-    f.add_transition ("Tirer du foot","Tirer du foot","Again",evitement)
-    f.add_transition ("Tirer du foot","Avance","Walk",avance)
-    f.add_transition ("Tirer du foot","Gauche","Left",goLeft)
-    f.add_transition ("Tirer du foot","Droite","Right",goRight)
-    f.add_transition ("Tirer du foot","Idle","Wait",doWait)
-    f.add_transition ("Tirer du foot","Tourne a gauche","Turn on the Left",left)
-    f.add_transition ("Tirer du foot","Tourne a droite","Turn on the Right",right)
-    f.add_transition ("Tirer du foot","Arriere","Go back",goBack)
-    f.add_transition ("Tirer du foot","Evitement","Obstacle", evitement)
-    f.add_transition ("Tirer du foot","Tirer du foot","Move foot", move_foot)
+
+
+
+
+
+
+
 
     # initial state
     f.set_state ("Idle") 
@@ -625,3 +565,6 @@ if __name__== "__main__":
             run = False
             
     print "End of the programm"
+
+
+

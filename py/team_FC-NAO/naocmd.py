@@ -61,10 +61,8 @@ def decal_gauche(motion,posture,freq):
     theta  = 0.0
     motion.setWalkTargetVelocity(x, y, theta, freq)
 
-def tout_droit(motion,posture,freq):
+def tout_droit(motion,posture,freq,x,y):
     motion.stopMove()
-    x  = 1.0
-    y  = 0.0
     theta  = 0.0
     motion.setWalkTargetVelocity(x, y, theta, freq)
 

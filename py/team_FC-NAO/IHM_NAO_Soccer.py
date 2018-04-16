@@ -49,8 +49,13 @@ class Ui_MainWindow(object):
         self.comboBox.addItem("")
         self.comboBox.addItem("")
         self.comboBox.addItem("")
+        self.comboBox_2 = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox_2.setGeometry(QtCore.QRect(150, 180, 101, 30))
+        self.comboBox_2.setObjectName("comboBox")
+        self.comboBox_2.addItem("Clavier")
+        self.comboBox_2.addItem("Joystick")
         self.ValiderParam = QtWidgets.QPushButton(self.centralwidget)
-        self.ValiderParam.setGeometry(QtCore.QRect(150, 180, 91, 28))
+        self.ValiderParam.setGeometry(QtCore.QRect(135, 240, 131, 28))
         self.ValiderParam.setObjectName("ValiderParam")
         self.ValiderParam.clicked.connect(self.valider)
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
@@ -132,7 +137,11 @@ class Ui_MainWindow(object):
         ip=self.textEdit.toPlainText()
         port=self.textEdit_2.toPlainText()
         distance=self.textEdit_3.toPlainText()
-        os.system("python FSM_NAO.py "+ip+" "+port+" "+distance)
+        if self.comboBox_2.currentText()=="Joystick":
+            joy="1"
+        else:
+            joy="0"
+        os.system("python FSM_NAO.py "+ip+" "+port+" "+distance+" "+joy)
     
     def choix_robot(self):
         self.textEdit.setText(self.comboBox.currentText())
