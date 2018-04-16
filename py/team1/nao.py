@@ -218,9 +218,6 @@ class Nao:
     def doWakeUp(self):
         self.motion.wakeUp()
 
-    def walk_back(self):
-        self.motion.move(-0.1, 0, 0)
-
     def sidestepR(self):
         footStepsList = []
         footStepsList.append([["RLeg"], [[0.00, -0.16, 0.0]]])

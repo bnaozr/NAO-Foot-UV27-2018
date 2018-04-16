@@ -160,7 +160,7 @@ def main():
                     if abs(event.value) < jTolerance:
                         nao.set_y_speed(0)
                     else:
-                        nao.set_y_speed(event.value)
+                        nao.set_y_speed(-event.value)
                     nao.joystick()
 
                 if event.axis == 1:
