@@ -1,5 +1,5 @@
 import sys
-import motion
+import motion as mo
 import time
 from naoqi import ALProxy
 import math
@@ -89,6 +89,47 @@ def tourner_a_droite(motion,freq):
     theta  = -1.0
     motion.setWalkTargetVelocity(x, y, theta, freq)
 
+def tir(motion, posture, freq):
+
+    posture.goToPosture("StandInit", 0.5)
+
+    # Activate Whole Body Balancer
+    isEnabled  = True
+    motion.wbEnable(isEnabled)
+
+    # Legs are constrained fixed
+    stateName  = "Fixed"
+    supportLeg = "Legs"
+    motion.wbFootState(stateName, supportLeg)
+
+    # Constraint Balance Motion
+    isEnable   = True
+    supportLeg = "Legs"
+    motion.wbEnableBalanceConstraint(isEnable, supportLeg)
+
+    # Com go to LLeg
+    supportLeg = "LLeg"
+    duration   = 2.0
+    motion.wbGoToBalance(supportLeg, duration)
+
+    motion.stopMove()
+    stateName  = "Free"
+    supportLeg = "RLeg"
+    motion.wbFootState(stateName, supportLeg)
+    effectorName = "RLeg"
+    axisMask     = 63
+    espace        = mo.FRAME_ROBOT
+    dx      = 0.05                 
+    dz      = 0.05                 
+    dwy     = 5.0*math.pi/180.0    
+    times   = [2.0, 3.7, 4.5]
+    isAbsolute = False
+
+    targetList = [[-dx, 0.0, dz, 0.0, +dwy, 0.0],[+dx, 0.0, dz, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+
+    motion.positionInterpolation(effectorName, espace, targetList,axisMask, times, isAbsolute)
+    motion.stopMove()
+
 def stop(motion):
     motion.stopMove()
 
@@ -106,6 +147,7 @@ def donnee_sonar(sonar,memory,motion,dist=0.5):
         return True,valL,valR
     else:
         return False,valL,valR
+
 
 
 
