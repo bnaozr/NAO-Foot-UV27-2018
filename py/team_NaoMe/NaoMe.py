@@ -217,6 +217,10 @@ def doRun():
             event="StrafeL"
         if c==pygame.K_RIGHT:
             event="StrafeR"
+        if c==pygame.K_a:
+            event="KickL"
+        if c==pygame.K_e:
+            event="KickR"
     return event
 
 def TurnRight():
@@ -580,6 +584,10 @@ def doFast():
             event="Stop"
         if c==pygame.K_SPACE:
             event="Wait"
+        if c==pygame.K_a:
+            event="KickL"
+        if c==pygame.K_e:
+            event="KickR"
     return event
 
 def KickLeft():
@@ -726,6 +734,8 @@ if __name__== "__main__":
     f.add_transition ("AvanceRapide","End","Stop",Stop);
     f.add_transition ("AvanceRapide","Recule","MovingBackward",doRecule)
     f.add_transition ("AvanceRapide", "Avoid", "Obstacle", doAvoid)
+    f.add_transition ("AvanceRapide","Kick","KickR",KickRight);
+    f.add_transition ("AvanceRapide","Kick","KickL",KickLeft);
 
     
     f.add_transition ("Recule","Recule","MovingBackward",doRecule);
