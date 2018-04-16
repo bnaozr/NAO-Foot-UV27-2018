@@ -173,7 +173,7 @@ def avance():
     global move_flag,lastevent
     if not(move_flag):
         move_flag=True
-        naocmd.tout_droit(motion,posture,1)
+        naocmd.tout_droit(motion,posture,1,x,y)
         print "Avance d'un pas"  
     time.sleep(0.5)
     newKey,val = getMouv(); 
