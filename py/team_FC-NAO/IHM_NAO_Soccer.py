@@ -141,7 +141,7 @@ class Ui_MainWindow(object):
             joy="1"
         else:
             joy="0"
-        os.system("python FSM_NAO.py "+ip+" "+port+" "+distance+" "+joy)
+        os.system("python Final.py "+ip+" "+port+" "+distance+" "+joy)
     
     def choix_robot(self):
         self.textEdit.setText(self.comboBox.currentText())
