@@ -194,7 +194,7 @@ def doRun():
     motionProxy.setWalkTargetVelocity(x, y, 0, frequency)
     print(">>>>>> action : run for 1 s")   # do some work
     sonarProxy.subscribe("myApplication")
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey(); # check if key pressed
     event = "Go"
     if obstacle() : event = "Obstacle"
@@ -222,7 +222,7 @@ def doRun():
 def TurnRight():
     motionProxy.setWalkTargetVelocity(0, y, theta1, frequency)
     print(">>>>>> action : rotation a droite pendant 1 s") 
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey(); # check if key pressed
     event = "TurnR"
     if newKey:
@@ -251,7 +251,7 @@ def TurnRight():
 def TurnLeft():
     motionProxy.setWalkTargetVelocity(0, y, theta2, frequency)
     print(">>>>>> action : rotation a gauche pendant 1 s") 
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey(); # check if key pressed
     event = "TurnL"
     if newKey:
@@ -279,7 +279,7 @@ def TurnLeft():
 
 def doWait():
     motionProxy.stopMove()
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
@@ -387,11 +387,6 @@ def doStrafeLWS():
 def doStrafeRWS():
     motionProxy.setWalkTargetVelocity(0, -1, 0, frequency)
     print(">>>>>> action : strafe right for 1 s")   # do some work
-    sonarProxy.subscribe("myApplication")
-    time.sleep(0.25)
-    a = (memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value") < 1 )
-    b = (memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value") < 1 )
-    time.sleep(0.75)
     newKey,c = getKey(); # check if key pressed
     event = "StrafeR"
     if newKey:
@@ -417,7 +412,7 @@ def doCrouch():
     postureProxy.goToPosture("Crouch", 0.3)
     motionProxy.setStiffnesses("Body", 0.0)
     print(">>>>>> action : sleep d'1 s")
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey(); # check if key pressed
     event = "Bed"
     if newKey:
@@ -431,7 +426,7 @@ def dofonctionne():
     postureProxy.goToPosture("StandInit", 0.5)
     motionProxy.setWalkArmsEnabled(True, True)
     print(">>>>>> action :Pret") 
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey(); # check if key pressed
     event = "Wait"
     if newKey:
@@ -472,7 +467,7 @@ def doAvoid():
     DD = k
     Frequency = 1.0
     motionProxy.setWalkTargetVelocity(X, Y, Theta, Frequency)
-    time.sleep(0.2)
+    time.sleep(0.1)
     newKey,c = getKey()
     event = "Nothing"
     if obstacle() : event = "Obstacle"
@@ -559,24 +554,22 @@ def KickRight():
     motionProxy.positionInterpolation(Shooting_Leg, space, targetList,axisMask, times, isAbsolute)
     KickOff()
     print(">>>>>> action : Tir Droit")
-    time.sleep(1.0)
+    time.sleep(0.1)
     newKey,c = getKey();
     event = "Wait"
     if newKey:
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_LSHIFT:
-            event = "Gofast"
-        if c==pygame.K_DOWN:
-            event = "MovingBackward"
+    return event
 
 def doFast():
     motionProxy.setWalkTargetVelocity(1.0, 0, 0, 0.3)
     print(">>>>>> action : Avance Rapide pendant 1 s")
-    time.sleep(1.0)
+    time.sleep(0.1)
     newKey,c = getKey();
     event = "Gofast"
-    if newKey:
+    if obstacle() : event = "Obstacle"
+    elif newKey:
         if c==pygame.K_d:
             event="TurnR"
         if c==pygame.K_q:
@@ -587,7 +580,6 @@ def doFast():
             event="Stop"
         if c==pygame.K_SPACE:
             event="Wait"
-
     return event
 
 def KickLeft():
@@ -599,16 +591,12 @@ def KickLeft():
     motionProxy.positionInterpolation(Shooting_Leg, space, targetList,axisMask, times, isAbsolute)
     KickOff()
     print(">>>>>> action : Tir Gauche")
-    time.sleep(1.0)
+    time.sleep(0.1)
     newKey,c = getKey();
     event = "Wait"
     if newKey:
         if c==pygame.K_b:
             event="Bed"
-        if c==pygame.K_LSHIFT:
-            event = "Gofast"
-        if c==pygame.K_DOWN:
-            event = "MovingBackward"
     return event
 
 
@@ -616,7 +604,7 @@ def doRecule():
     if State != "Recule" and State != "Ready" : motionProxy.stopMove()
     motionProxy.setWalkTargetVelocity(-1.0, 0, 0, 0.1)
     print(">>>>>> action : Recule pendant 1 s")
-    time.sleep(1.0)
+    time.sleep(0.1)
     newKey,c = getKey();
     event = "MovingBackward"
     if newKey:
@@ -737,6 +725,8 @@ if __name__== "__main__":
     f.add_transition ("AvanceRapide","Deplacement","Go",doRun);
     f.add_transition ("AvanceRapide","End","Stop",Stop);
     f.add_transition ("AvanceRapide","Recule","MovingBackward",doRecule)
+    f.add_transition ("AvanceRapide", "Avoid", "Obstacle", doAvoid)
+
     
     f.add_transition ("Recule","Recule","MovingBackward",doRecule);
     f.add_transition ("Recule","Ready","Wait",doWait);
