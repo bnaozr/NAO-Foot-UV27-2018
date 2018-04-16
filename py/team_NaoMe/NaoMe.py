@@ -12,7 +12,7 @@ import numpy as np
 import cv2
 from numpy.random import randint
 pygame.init()
-pygame.display.set_mode((100, 100))
+screen = pygame.display.set_mode((320, 240))
 
 DD = randint(0,2)
 robotIp = "localhost"
@@ -67,11 +67,17 @@ voicePxy.say("Bonjour")
 # proxy naoqi
 videoDevice = ALProxy('ALVideoDevice', robotIp, robotPort)
 
+
+
 # subscribe top camera
 AL_kTopCamera = 0       #camera du haut
 AL_kQVGA = 1 # pour une image à 320*240px
 AL_kBGRColorSpace = 13  #code pour obtenir rgb
-captureDevice = videoDevice.subscribeCamera("test", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
+try:
+    captureDevice = videoDevice.subscribeCamera("test", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
+except Exception:
+    videoDevice.unsubscribe("test")
+    captureDevice = videoDevice.subscribeCamera("test", AL_kTopCamera, AL_kQVGA, AL_kBGRColorSpace, 10)
 
 def getImage(): #cf doc aldebaran pour un affichage en live
     
@@ -97,7 +103,12 @@ def getImage(): #cf doc aldebaran pour un affichage en live
                 i += 3
 
         # show image
-        cv2.imshow("pepper-top-camera-320x240", image)
+#        cv2.imshow("pepper-top-camera-320x240", image)
+    image2=pygame.Surface((height, width))
+    pygame.surfarray.blit_array(image2,image)
+    image2 = pygame.transform.rotate(image2,-90.)
+    screen.blit(image2,(0,0))
+    pygame.display.flip()
 
 
 ### Partie pour Déterminer la Position du Robot
@@ -512,6 +523,7 @@ def obstacle():
 
 def Stop():
     motionProxy.stopMove()
+    videoDevice.unsubscribe("test")
     postureProxy.goToPosture("Crouch", 0.3)
     motionProxy.setStiffnesses("Body", 0.0)
     print(">>>>>> Fin du programme") 
