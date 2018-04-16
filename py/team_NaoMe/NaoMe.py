@@ -481,7 +481,7 @@ def doAvoid():
         if c==pygame.K_d:
             event="TurnR"
         if c==pygame.K_UP:
-            event="Go"
+            event="Nothing"
         if c==pygame.K_s:
             event="Stop"
         if c==pygame.K_b:
@@ -723,6 +723,8 @@ if __name__== "__main__":
     f.add_transition ("Strafe","Recule","MovingBackward",doRecule)
     f.add_transition ("Strafe","Strafe","StrafeR2",doStrafeRWM);
     f.add_transition ("Strafe","Strafe","StrafeL2",doStrafeRWM);
+    f.add_transition ("Strafe","Deplacement","Go",doRun);
+
 
     f.add_transition ("Kick","Ready","Wait",doWait);
     f.add_transition ("Kick","End","Stop",Stop);
