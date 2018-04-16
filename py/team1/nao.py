@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from naoqi import ALProxy
 
-import sys
-import motion
 import time
 import math
 import numpy as np
@@ -55,38 +53,39 @@ class Nao:
     def get_pos(self):
         return self.motion.getRobotPosition(True)
     
-    def getPosBall(self):
+    def getPosBall(self,xref, yref, thetaRef):
         ball, xLoc, yLoc, dballepx = self.detectBallon(self.ip, self.port)
         xb, yb, xc, yc = None,None,None,None
         if ball:
+            xrob, yrob, _, _, _, Rz = self.get_pos()
             taille_px = 1.9*10**-6
             dballe = dballepx*taille_px
             dballereel = 0.08  # diamètre de la balle en m
             g = dballereel/dballe
             f = 556*taille_px # distance focale en m
             distance_balle = f*(1-g)
-            xrob = self.get_pos()[0]
-            yrob = self.get_pos()[1]
-            Rz = self.get_pos()[5]
+            xrob -= xref
+            yrob -= yref
+            Rz -= thetaRef
              
             coord_centre = [1280/2,yLoc]
             coord_balle = [xLoc,yLoc]
-            
-            #coordonnées de la balle dans le repère du robot(FrameRobot) en m
-            y =- (coord_balle[0]-coord_centre[0])*taille_px
-            x = np.sqrt(distance_balle**2-y**2)
-            
-            #coordonnées de la balle dans le repère frameworld en m
-            xb = (x-xrob)*np.cos(Rz)-(y-yrob)*np.sin(Rz)
-            yb = (y-yrob)*np.cos(Rz)+(x-xrob)*np.sin(Rz)
-        
-            #coordonnées du centre de l'image dans le repère frameworld en m
-            xc = (distance_balle-xrob)*np.cos(Rz)-(-yrob)*np.sin(Rz)
-            yc = (-yrob)*np.cos(Rz)+(distance_balle-xrob)*np.sin(Rz)
     
-        return xb, yb, xc, yc
-	
-	  #fonction de transitions en doNomévénement
+            # coordonnées de la balle dans le repère du robot(FrameRobot) en m
+            y =- (coord_balle[0]-coord_centre[0])*taille_px
+            x = math.sqrt(distance_balle**2-y**2)
+            
+            # coordonnées de la balle dans le repère frameworld en m
+            xb = (x-xrob)*cos(Rz)-(y-yrob)*sin(Rz)
+            yb = (y-yrob)*cos(Rz)+(x-xrob)*sin(Rz)
+        
+            # coordonnées du centre de l'image dans le repère frameworld en m
+            xc = (distance_balle-xrob)*cos(Rz)-(-yrob)*sin(Rz)
+            yc = (-yrob)*cos(Rz)+(distance_balle-xrob)*sin(Rz)
+        
+            return xb, yb, xc, yc
+    	
+    	  #fonction de transitions en doNomévénement
       
     def standUp(self):
         pNames = "Body"
