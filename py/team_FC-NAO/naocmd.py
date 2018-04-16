@@ -1,5 +1,5 @@
 import sys
-import motion
+import motion as mo
 import time
 from naoqi import ALProxy
 import math
@@ -45,17 +45,34 @@ def initialisation():
     motionProxy.wakeUp()
     motionProxy.setStiffnesses("Body", 1.0)
 
-    return(motionProxy,postureProxy,sonarProxy, memoryProxy)
+    return(motionProxy,postureProxy,sonarProxy,memoryProxy)
 
-
-
-def tout_droit(motion,posture,freq):
+def decal_droite(motion,posture,freq):
     motion.stopMove()
-    x  = 1.0
-    y  = 0.0
+    x  = 0.0
+    y  = -1.0
+    theta  = 0.0
+    motion.setWalkTargetVelocity(x, y, theta, freq)
+    
+def decal_gauche(motion,posture,freq):
+    motion.stopMove()
+    x  = 0.0
+    y  = 1.0
     theta  = 0.0
     motion.setWalkTargetVelocity(x, y, theta, freq)
 
+def tout_droit(motion,posture,freq,x,y):
+    motion.stopMove()
+    theta  = 0.0
+    motion.setWalkTargetVelocity(x, y, theta, freq)
+
+def marche_arriere(motion,posture,freq):
+    motion.stopMove()
+    x  = -1.0
+    y  = 0.0
+    theta  = 0.0
+    motion.setWalkTargetVelocity(x, y, theta, freq)
+    
 def tourner_a_gauche(motion,freq):
     motion.stopMove()
     x  = 0.0
@@ -69,6 +86,47 @@ def tourner_a_droite(motion,freq):
     y  = 0.0
     theta  = -1.0
     motion.setWalkTargetVelocity(x, y, theta, freq)
+
+def tir(motion, posture, freq):
+
+    posture.goToPosture("StandInit", 0.5)
+
+    # Activate Whole Body Balancer
+    isEnabled  = True
+    motion.wbEnable(isEnabled)
+
+    # Legs are constrained fixed
+    stateName  = "Fixed"
+    supportLeg = "Legs"
+    motion.wbFootState(stateName, supportLeg)
+
+    # Constraint Balance Motion
+    isEnable   = True
+    supportLeg = "Legs"
+    motion.wbEnableBalanceConstraint(isEnable, supportLeg)
+
+    # Com go to LLeg
+    supportLeg = "LLeg"
+    duration   = 2.0
+    motion.wbGoToBalance(supportLeg, duration)
+
+    motion.stopMove()
+    stateName  = "Free"
+    supportLeg = "RLeg"
+    motion.wbFootState(stateName, supportLeg)
+    effectorName = "RLeg"
+    axisMask     = 63
+    espace        = mo.FRAME_ROBOT
+    dx      = 0.05                 
+    dz      = 0.05                 
+    dwy     = 5.0*math.pi/180.0    
+    times   = [2.0, 3.7, 4.5]
+    isAbsolute = False
+
+    targetList = [[-dx, 0.0, dz, 0.0, +dwy, 0.0],[+dx, 0.0, dz, 0.0, 0.0, 0.0],[0.0, 0.0, 0.0, 0.0, 0.0, 0.0]]
+
+    motion.positionInterpolation(effectorName, espace, targetList,axisMask, times, isAbsolute)
+    motion.stopMove()
 
 def stop(motion):
     motion.stopMove()
@@ -87,6 +145,7 @@ def donnee_sonar(sonar,memory,motion,dist=0.5):
         return True,valL,valR
     else:
         return False,valL,valR
+
 
 
 
