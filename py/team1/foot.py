@@ -96,6 +96,7 @@ def main():
                            dest='lateralShuffelRightward',
                            before='doLateralShuffelRight')
 
+    # Destination 'joyMove'
     sourceJoystick = ['backward', 'foreward', 'joyMove',
                       'lateralShuffelLeftward', 'lateralShuffelRightward',
                       'leftward', 'rest', 'rightward']
