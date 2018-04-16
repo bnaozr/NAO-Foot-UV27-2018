@@ -133,20 +133,22 @@ def main():
     machine = Machine(model=nao, states=states, transitions=transitions,
                       initial='idle', ignore_invalid_triggers=True)
 
-    machine.add_transition('joystick', ['backward', 'foreward', 'joyMove', 'leftward', 'rest', 'rightward'], 'joyMove', before='doJoyMove')
+    machine.add_transition('joystick', ['backward', 'foreward', 'joyMove',
+                           'leftward', 'rest', 'rightward'], 'joyMove',
+                           before='doJoyMove')
 
     xref, yref, _ = nao.get_pos()
     scale = 50
-    l = 640
-    h = 480
+    window_width = 640
+    window_height = 480
     pg.init()
-    window = pg.display.set_mode((l, h))
+    window = pg.display.set_mode((window_width, window_height))
 
     detect_obstacle = True
-    
+
     pg.joystick.init()
     jTolerance = 0.2
-    
+
     for i in range(pg.joystick.get_count()):
         pg.joystick.Joystick(i).init()
 
@@ -213,10 +215,10 @@ def main():
             nao.avoid_obstacle()
 
         x, y, theta = nao.get_pos()
-        x = int((x-xref)*scale)+l/2 
+        x = int((x-xref)*scale)+l/2
         y = -int((y-yref)*scale)+h/2
-        window.fill((0,255,0))
-        pg.draw.circle(window, (0,0,255), (x,y), 6)
+        window.fill((0, 255, 0))
+        pg.draw.circle(window, (0, 0, 255), (x, y), 6)
 
         pg.display.flip()
         pg.time.delay(100)
