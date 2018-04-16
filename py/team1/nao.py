@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 from naoqi import ALProxy
 
-import sys
-import motion
 import time
 import math
 import numpy as np
@@ -218,9 +216,6 @@ class Nao:
 
     def doWakeUp(self):
         self.motion.wakeUp()
-
-    def walk_back(self):
-        self.motion.move(-0.1, 0, 0)
 
     def sidestepR(self):
         footStepsList = []
