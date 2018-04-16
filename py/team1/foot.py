@@ -137,7 +137,7 @@ def main():
                            'leftward', 'rest', 'rightward'], 'joyMove',
                            before='doJoyMove')
 
-    xref, yref, _ = nao.get_pos()
+    xref, yref, _, _, _, thetaRef = nao.get_pos()
     scale = 50
     window_width = 640
     window_height = 480
@@ -217,9 +217,15 @@ def main():
         x, y, theta = nao.get_pos()
         x = int((x-xref)*scale)+window_width/2
         y = -int((y-yref)*scale)+window_height/2
+        
+        xb, yb, _, _ = nao.getPosBall(xref,yref,thetaRef)
+        xb = int((xb)*scale)+l/2 
+        yb = -int((yb)*scale)+h/2
+        
         window.fill((0, 255, 0))
         pg.draw.circle(window, (0, 0, 255), (x, y), 6)
-
+        pg.draw.circle(window, (255,255,0), (xb,yb), 3)
+        
         pg.display.flip()
         pg.time.delay(100)
 
