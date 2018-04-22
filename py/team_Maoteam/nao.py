@@ -169,7 +169,7 @@ class Nao:
         # RLeg is optimized
         effectorName = "RLeg"
         axisMask = 63
-        space = self.motion.FRAME_ROBOT
+        space = 2
 
         # Motion of the RLeg
         dx = 0.05                 # translation axis X (meters)
