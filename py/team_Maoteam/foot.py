@@ -103,7 +103,7 @@ def main():
     machine.add_transition(trigger='joystick', source=sourceJoystick, dest='joyMove',
                            before='doJoyMove')
 
-    xref, yref, _, _, _, thetaRef = nao.get_pos()
+    xref, yref, thetaRef = nao.get_pos()
     scale = 50
     window_width = 640
     window_height = 480
