@@ -243,7 +243,7 @@ class Nao:
                 [stepFrequency],
                 clearExisting)
 
-    def insulte(self):
+    def doShout(self):
         L = ["Ma grand-mère joue mieux que toi",
              "Ba alors, casse toi pauvre con", "Allez Paris",
              "Vous n'avez pas honte?", "Ba alors, on attend pas Patrick?",
