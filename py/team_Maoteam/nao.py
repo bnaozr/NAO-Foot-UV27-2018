@@ -5,6 +5,8 @@ import time
 import math
 import numpy as np
 
+from rec_ballon_nao import detectBallon
+
 
 class Nao:
     def __init__(self, ip, port):
@@ -16,7 +18,7 @@ class Nao:
         self.sonar.subscribe('nao')
         self.tts = ALProxy("ALTextToSpeech", ip, int(port))
 
-        self.maxXSpeed = 0.2
+        self.maxXSpeed = 0.1
         self.maxYSpeed = 0.2
         self.maxRotationSpeed = 0.4
         self.xSpeed = 0
@@ -54,7 +56,7 @@ class Nao:
         return self.motion.getRobotPosition(True)
     
     def getPosBall(self,xref, yref, thetaRef):
-        ball, xLoc, yLoc, dballepx = self.detectBallon(self.ip, self.port)
+        ball, xLoc, yLoc, dballepx = detectBallon(self.ip, self.port)
         xb, yb, xc, yc = None,None,None,None
         if ball:
             xrob, yrob, _, _, _, Rz = self.get_pos()
@@ -158,7 +160,7 @@ class Nao:
 
         # Com go to LLeg
         supportLeg = "LLeg"
-        duration = 2.0
+        duration = 1.0
         self.motion.wbGoToBalance(supportLeg, duration)
 
         # RLeg is free
@@ -172,7 +174,7 @@ class Nao:
         space = 2
 
         # Motion of the RLeg
-        dx = 0.05                 # translation axis X (meters)
+        dx = 0.1                # translation axis X (meters)
         dz = 0.05                 # translation axis Z (meters)
         dwy = 5.0*math.pi/180.0    # rotation axis Y (radian)
 
@@ -193,7 +195,7 @@ class Nao:
 
         # Com go to LLeg
         supportLeg = "RLeg"
-        duration = 2.0
+        duration = 1.0
         self.motion.wbGoToBalance(supportLeg, duration)
 
         # RLeg is free
