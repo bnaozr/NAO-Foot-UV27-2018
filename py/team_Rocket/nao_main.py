@@ -81,7 +81,7 @@ def go():
     valL = memoryProxy.getData("Device/SubDeviceList/US/Left/Sensor/Value")
     valR = memoryProxy.getData("Device/SubDeviceList/US/Right/Sensor/Value")
     sonarProxy.unsubscribe("SonarApp")
-    if (valL<=0.3 or valR<=0.3):
+    if (valL<=0.1 or valR<=0.1):
         motionProxy.stopMove()
         event="Obstacle"
     else:
@@ -324,7 +324,7 @@ def evitement():
     frequency=0.75
     event = "Obstacle"
     key_pressed = pygame.key.get_pressed()
-    if valR>100*valL or valL>100*valR and valL > 0.3 and valR > 0.3:
+    if valR>10*valL or valL>10*valR and valL > 0.1 and valR > 0.1:
         event = "FinObstacle"
     elif valR<valL:
         theta  = math.pi/4.0 
