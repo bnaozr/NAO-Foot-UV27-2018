@@ -184,8 +184,7 @@ def possibilityStart():
                 elif even.key == pygame.K_k:
                     event="Kill"    
                 elif even.key == pygame.K_SPACE:
-                    event="Shoot"
-                    cm.ReadytoShoot()
+                    event="Shoot"   
                 elif even.key == pygame.K_d:
                     event="Dab"  
             if even.type == pygame.JOYAXISMOTION:

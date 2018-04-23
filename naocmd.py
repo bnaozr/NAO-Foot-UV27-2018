@@ -17,7 +17,6 @@ robotIp="localhost"
 robotPort=11212
 
 robotIp = "172.20.27.34"
-robotPort = 9559
 
 if (len(sys.argv) >= 2):
     robotIp = sys.argv[1]
@@ -127,7 +126,6 @@ def ReadytoShoot():
     except Exception : 
         return(None)
     return(None)
-    
     
 def cmdIDLE():
     motionProxy.rest()
