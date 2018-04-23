@@ -16,8 +16,7 @@ import argparse
 robotIp="localhost"
 robotPort=11212
 
-robotIp = "172.20.27.034"
-robotPort = 9559
+robotIp = "172.20.27.34"
 
 if (len(sys.argv) >= 2):
     robotIp = sys.argv[1]
@@ -71,34 +70,62 @@ def cmdReady():
     motionProxy.wakeUp()
     
 def IDLEtoReady():
-    aup.post.playFile("/home/nao/music/IDLETOREADY.wav",0.7,0)
+    try:   
+        aup.post.playFile("/home/nao/music/IDLETOREADY.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
 
 def AlltoReady():
-    aup.post.playFile("/home/nao/music/ALLTOREADY.wav",0.7,0)
+    try:
+        aup.post.playFile("/home/nao/music/ALLTOREADY.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
 
 def ReadytoAvance():
-    aup.post.playFile("/home/nao/music/READYTOAVANCE.wav",0.7,0)
+    try :
+        aup.post.playFile("/home/nao/music/READYTOAVANCE.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
 
 def ReadytoIDLE():
-    aup.post.playFile("/home/nao/music/READYTOIDLE.wav",0.7,0)
+    try:
+        aup.post.playFile("/home/nao/music/READYTOIDLE.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
     
 def ReadytoRG():
-    aup.post.playFile("/home/nao/music/READYTORG.wav",0.7,0)
+    try :
+        aup.post.playFile("/home/nao/music/READYTORG.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
 
+
 def ReadytoRD():
-    aup.post.playFile("/home/nao/music/READYTORD.wav",0.7,0)
+    try:
+        aup.post.playFile("/home/nao/music/READYTORD.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
 
 
 def AlltoBK():
-    aup.post.playFile("/home/nao/music/ALLTOBACKWARD.wav",0.7,0)
+    try:
+        aup.post.playFile("/home/nao/music/ALLTOBACKWARD.wav",0.7,0)
+    except Exception : 
+        return(None)
     return(None)
-
+    
+def ReadytoShoot():
+    try:
+        aup.post.playFile("/home/nao/music/READYTOSHOOT.mp3",0.7,0)
+    except Exception : 
+        return(None)
+    return(None)
     
 def cmdIDLE():
     motionProxy.rest()
