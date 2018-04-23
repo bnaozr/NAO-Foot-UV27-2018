@@ -171,6 +171,9 @@ def main():
 
                 elif event.key == K_s:
                     nao.sleep()
+                    
+                elif event.key == K_w:
+                    nao.shout()
 
                 elif event.key == K_o:
                     detect_obstacle = not detect_obstacle
