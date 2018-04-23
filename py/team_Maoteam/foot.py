@@ -97,11 +97,16 @@ def main():
                            before='doLateralShuffelRight')
 
     # Destination 'joyMove'
-    sourceJoystick = ['backward', 'foreward', 'joyMove',
+    sourceJoystick = ['backward', 'forward', 'joyMove',
                       'lateralShuffelLeftward', 'lateralShuffelRightward',
                       'leftward', 'rest', 'rightward']
     machine.add_transition(trigger='joystick', source=sourceJoystick, dest='joyMove',
                            before='doJoyMove')
+    
+    sourceForward = ['leftward', 'rightward', 'forward', 'backward',
+            'lateralShuffelLeftward', 'lateralShuffelRightward', 'joyMove']
+    machine.add_transition(trigger='standUp', source=sourceForward, dest='rest',
+                           before='doStandUp')
 
     xref, yref, thetaRef = nao.get_pos()
     scale = 50
