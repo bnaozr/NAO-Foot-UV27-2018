@@ -32,7 +32,7 @@ except:
 
 # global variables
 f = fsm.fsm();  # finite state machine
-tseq= 0.5
+tseq= 0.2
 fractSpeed=0.8
 global is_sleeping
 is_sleeping = False
@@ -226,7 +226,7 @@ def possibilityStop():
 
 def possibilityForward():
     global event
-    X = 0.5
+    X = 1.0
     Y = 0.0
     Theta = 0.0
     Frequency = 0.8
@@ -301,7 +301,7 @@ def possibilityBackward():
     fenetre.blit(arrow_down, (110,450))
     pygame.display.flip()
     global event
-    X = -0.5
+    X = -1.0
     Y = 0.0
     Theta = 0.0
     Frequency = 0.8
@@ -463,7 +463,7 @@ def possibilityBackwardLeft():
     fenetre.blit(arrow_dbl, (70,370))
     pygame.display.flip()
     global event
-    X = -1
+    X = -1.0
     Y = 0.0
     Theta = 0.5
     Frequency = 0.8
@@ -506,7 +506,7 @@ def possibilityBackwardRight():
     fenetre.blit(arrow_dbl, (250,370))
     pygame.display.flip()
     global event
-    X = -0.5
+    X = -1.0
     Y = 0.0
     Theta = -0.5
     Frequency = 0.8
@@ -549,7 +549,7 @@ def possibilityForwardLeft():
     fenetre.blit(arrow_dbl, (70,70))
     pygame.display.flip()
     global event
-    X = 0.5
+    X = 1.0
     Y = 0.0
     Theta = 0.5
     Frequency = 0.8
@@ -606,7 +606,7 @@ def possibilityForwardRight():
     fenetre.blit(arrow_dbl, (250,70))
     pygame.display.flip()
     global event
-    X = 0.5
+    X = 1.0
     Y = 0.0
     Theta = -0.5
     Frequency = 0.8
