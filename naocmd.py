@@ -71,35 +71,35 @@ def cmdReady():
     
 def IDLEtoReady():
     try:   
-        aup.post.playFile("/home/nao/music/IDLETOREADY.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/IDLETOREADY.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
 
 def AlltoReady():
     try:
-        aup.post.playFile("/home/nao/music/ALLTOREADY.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/ALLTOREADY.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
 
 def ReadytoAvance():
     try :
-        aup.post.playFile("/home/nao/music/READYTOAVANCE.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/READYTOAVANCE.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
 
 def ReadytoIDLE():
     try:
-        aup.post.playFile("/home/nao/music/READYTOIDLE.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/READYTOIDLE.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
     
 def ReadytoRG():
     try :
-        aup.post.playFile("/home/nao/music/READYTORG.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/READYTORG.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
@@ -107,7 +107,7 @@ def ReadytoRG():
 
 def ReadytoRD():
     try:
-        aup.post.playFile("/home/nao/music/READYTORD.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/READYTORD.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
@@ -115,14 +115,14 @@ def ReadytoRD():
 
 def AlltoBK():
     try:
-        aup.post.playFile("/home/nao/music/ALLTOBACKWARD.wav",0.7,0)
+        aup.post.playFile("/home/nao/music/ALLTOBACKWARD.wav",0.4,0)
     except Exception : 
         return(None)
     return(None)
     
 def ReadytoShoot():
     try:
-        aup.post.playFile("/home/nao/music/READYTOSHOOT.mp3",0.7,0)
+        aup.post.playFile("/home/nao/music/READYTOSHOOT.mp3",0.4,0)
     except Exception : 
         return(None)
     return(None)
