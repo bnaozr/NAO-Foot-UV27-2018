@@ -87,7 +87,7 @@ class Nao:
     	
     	  #fonction de transitions en doNomévénement
       
-    def standUp(self):
+    def doStandUp(self):
         pNames = "Body"
         pStiffnessLists = 1.0
         pTimeLists = 1.0
@@ -217,7 +217,7 @@ class Nao:
     def doWakeUp(self):
         self.motion.wakeUp()
 
-    def sidestepR(self):
+    def doLateralShuffelRight(self):
         footStepsList = []
         footStepsList.append([["RLeg"], [[0.00, -0.16, 0.0]]])
         footStepsList.append([["LLeg"], [[0.00, 0.1, 0.0]]])
@@ -230,7 +230,7 @@ class Nao:
                 [stepFrequency],
                 clearExisting)
 
-    def sidestepL(self):
+    def doLateralShuffelLeft(self):
         footStepsList = []
         footStepsList.append([["LLeg"], [[0.00, 0.16, 0.0]]])
         footStepsList.append([["RLeg"], [[0.00, -0.1, 0.0]]])
