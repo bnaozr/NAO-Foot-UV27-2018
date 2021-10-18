@@ -23,3 +23,5 @@ Vous pouvez aussi le faire avec les commandes suivantes :
 - tar xfz /public/share/uv27spid/v-rep-20180402.tgz
 
 Les équipes sont à définir dans le fichier "teams_n_games.txt"
+
+Les équipes sont maintenant à définir dans le fichier "teams.txt"
